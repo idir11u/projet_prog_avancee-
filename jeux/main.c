@@ -8,7 +8,7 @@
 #include "gestion_terrain.h"
 
 int main(int argc, char *argv[]){
-	
+	printf("\n");
 	int colonne=0,ligne=0;
 	taille_fichier("terrain.txt",&ligne,&colonne);
 	printf("%i \n",colonne);
