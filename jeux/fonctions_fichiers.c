@@ -3,7 +3,12 @@
 #include<string.h>
 #include"fonctions_fichiers.h"
 
-
+/**
+*Allocation d'un tableau à 2 dimensions ch caractères
+*@param n nombre de lignes 
+*@param m nombre de colonnes
+*@return tableau de Pointeurs (tableau à 2 dimensions)
+*/
 char** allouer_tab_2D(int n, int m)
 {
 	char** tab = malloc(n*sizeof(char*));
@@ -14,6 +19,13 @@ char** allouer_tab_2D(int n, int m)
 	return tab ;
 }
 
+
+
+/**
+*Libération de la mémoire alouée à la création du tableau de pointeurs
+*@param tab le tableau à désallouer
+*@param n nombre de lignes du tableau 
+*/
 void desallouer_tab_2D(char** tab, int n)
 {
 	for (int i=0 ; i<n ; i++)
@@ -24,6 +36,14 @@ void desallouer_tab_2D(char** tab, int n)
 
 }
 
+
+
+/**
+*Affichage d'un tableau à 2 dimensions de caractères
+*@param tab le tableau à afficher
+*@param n le nombre de lignes du tableau
+*@param m le nombre de colonnes du tableau
+*/
 void afficher_tab_2D(char** tab, int n, int m)
 {
 	for (int i = 0; i<n; i++)      
@@ -36,6 +56,13 @@ void afficher_tab_2D(char** tab, int n, int m)
 	}
 }
 
+
+/**
+*Calcul de la taille(nombre de lignes et de colonnes) maximale d'un fichier 
+*@param nomFichier le fichier 
+*@param nbLig	adresse dans laquelle stocker le nombre max de lignes du fichier 
+*@param nbCol   adresse dans laquelle stocker le nombre max de colonnes du fichier
+*/
 void taille_fichier(const char* nomFichier, int* nbLig, int* nbCol)
 {
 	FILE* fichier = fopen(nomFichier,"r");
@@ -75,6 +102,14 @@ void taille_fichier(const char* nomFichier, int* nbLig, int* nbCol)
     }
 }
 
+
+
+/**
+*Lecture d'un fichier et sa copie dans un tableau à 2 dimension 
+*@param nomFichier le tableau à lire
+*@return le tableau contenant tous les carabtères du fichier
+*/
+
 char** lire_fichier(const char* nomFichier)
 {
 	FILE* fichier =  fopen(nomFichier,"r");
@@ -111,6 +146,17 @@ char** lire_fichier(const char* nomFichier)
 	return tab;
 }
 
+
+/**
+*Modifier un caractère présent dans un tableau par un autre 
+*@param tab le tableau de caractère à modifier 
+*@param	n nombre de lignes du tableau
+*@param m nombre de colonnes du tableau 
+*@param ancien le caractère à remplacer
+*@param nouveau le nouveau caractère
+*@return un nouveau tableau sur lequel on a replacé les caractères souhaités 
+*/
+
 char** modifier_caractere(char** tab, int n, int m, char ancien, char nouveau)
 {
 	char ** nv = allouer_tab_2D(n,m);
@@ -126,6 +172,14 @@ char** modifier_caractere(char** tab, int n, int m, char ancien, char nouveau)
 	}
 	return nv;
 }
+
+/**
+*Ecriture sur un fichier à partir d'un tableau de caractères
+*@param nomFichier le fichier
+*@param	tab le tableau
+*@param	n nombre de lignes du tableau
+*@param m nombre de colonnes du tableau
+*/
 void ecrire_fichier(const char* nomFichier, char** tab, int n, int m)
 {
 	FILE* fichier =  fopen(nomFichier,"w");
