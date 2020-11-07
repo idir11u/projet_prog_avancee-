@@ -5,7 +5,7 @@
 #include"fonctions_fichiers.h"
 #include"gestion_terrain.h"
 
-
+/**/
 void creer_SDL_Renderer_terrain(terrain_t *t,int ligne, int colonne)
 {
 	t->DestR_terrain = malloc(ligne*sizeof(SDL_Rect*));
