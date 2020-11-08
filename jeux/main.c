@@ -6,18 +6,33 @@
 #include "fonctions_SDL.h"
 #include "fonctions_fichiers.h"
 #include "gestion_terrain.h"
-#include "constante.h"
+#include  "constante.h"
 #include <math.h>
 #include <stdbool.h>
 
+struct  farme_s 
+{
+	int cpt; //le numero de l'image actuel qu'on afffiche sur la ligne
+	int dist; // est la distination 0 DOWN / 1 UP / 2 LEFT / 3 RIGHT.
+};
+typedef struct farme_s farme_t;
 
 struct sprite_s 
 {
+	farme_t farme;
 	SDL_Texture* image;
 	SDL_Rect SrcR_sprite;
 	SDL_Rect DestR_sprite;
 };
 typedef struct sprite_s sprite_t;
+
+struct world_s
+{
+	sprite_t joueur; //heros
+	terrain_t terrain; //le terrain de jeu
+	bool terminer; // si le jeu est fini (gameover )
+};
+typedef struct world_s world_t;
 
 
 void init_sprite(sprite_t * sprite  , int h_terrain ,int w_terrain)
@@ -28,8 +43,8 @@ void init_sprite(sprite_t * sprite  , int h_terrain ,int w_terrain)
 	sprite->DestR_sprite.w = w_terrain;
 	sprite->SrcR_sprite.x = 0;
 	sprite->SrcR_sprite.y = 0;
-	sprite->SrcR_sprite.w = LARGEUR_IMAGE_HEROS/NBR_VERTIC_IMAGE_HEROS;	
-	sprite->SrcR_sprite.h = HAUTEUR_IMAGE_HEROS / NBR_HORIS_IMAGE_HEROS;
+	sprite->SrcR_sprite.w = LARGEUR_IMAGE_HEROS/ NBR_HORIS_IMAGE_HEROS;	
+	sprite->SrcR_sprite.h = HAUTEUR_IMAGE_HEROS / NBR_VERTIC_IMAGE_HEROS;
 }
 
 void depacemnt_bordure(sprite_t* sprite,int Hauteur_ecran,int Largeur_ecran)
@@ -64,17 +79,47 @@ bool collision_murs(sprite_t sprite, terrain_t terrain, int ligne, int colonne)
 			}
 		}
 	}
-	return false;
-	
+	return false;	
 }
-/*
+
+void init_farme(farme_t *farme )
 {
-	if (SrcR_murs[i][j]->x ==0 && SrcR_murs[i][j]->y ==0 )
-		printf("vert\n");
-	else 
-		printf("pas vert\n");
+	farme->cpt = 0;
+	farme->dist = 0; //par defaut on met la distination down
+} 
+
+void update_farmes(farme_t *farme,int nbr_image_horisental,int i)  // elle va etre appliquer si on a changer destination  
+{
+	if (farme->dist == i)
+	{
+		if (farme->cpt < nbr_image_horisental-1)//nbr_image_horisental)
+			farme->cpt ++;
+		else 
+			farme->cpt = 0;
+	}
+	else // est la distination  i = 0 DOWN / i = 1 UP / i = 2 LEFT / i = 3  RIGHT.
+	{
+		if (i == 0)
+		{
+			farme->dist = 0;
+		}
+		else if(i == 1) 
+		{
+			farme->dist = 1;
+		}
+		else if(i == 2)
+		{
+			farme->dist = 2;
+		}
+		else if(i == 3)
+		{
+			farme->dist = 3;
+		}
+		farme->cpt = 0;
+	}
 }
-*/
+
+
 
 int main(int argc, char *argv[]){
 
@@ -95,7 +140,7 @@ int main(int argc, char *argv[]){
 	// Créer la fenêtre
 	
 	char **tab = lire_fichier("terrain.txt");
-	fenetre = SDL_CreateWindow("Fenetre SDL", SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,32*colonne,32*ligne, SDL_WINDOW_RESIZABLE);
+	fenetre = SDL_CreateWindow("Fenetre SDL", SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,40*colonne,40*ligne, SDL_WINDOW_RESIZABLE);
 	if(fenetre == NULL) // En cas d’erreur
 	{
 		printf("Erreur de la creation d’une fenetre: %s",SDL_GetError());
@@ -113,12 +158,11 @@ int main(int argc, char *argv[]){
 	Uint8 r = 0, g = 255, b = 255;
 	t.image = charger_image_transparente("pavage.bmp", ecran,r,g,b);
 	joueur.image = charger_image_transparente("sprite.bmp", ecran,r,g,b);
-	init_sprite(&joueur,32,32);
-
+	init_sprite(&joueur,40,40);
+	init_farme(&(joueur.farme));
 	//Boucle principale
 	while(!terminer)
 	{
-		int i ;
 		while( SDL_PollEvent( &evenements ) )
 			switch(evenements.type)
 			{
@@ -131,30 +175,43 @@ int main(int argc, char *argv[]){
 					case SDLK_q:
 						terminer = true;  break;
 					case SDLK_UP:
-						joueur.DestR_sprite.y = joueur.DestR_sprite.y - 8 ;
+						joueur.DestR_sprite.y = joueur.DestR_sprite.y - 4 ;
 						if (collision_murs(joueur,t,ligne,colonne))
-							joueur.DestR_sprite.y = joueur.DestR_sprite.y + 8 ; 
-
+							joueur.DestR_sprite.y = ((joueur.DestR_sprite.y/joueur.DestR_sprite.h)+1)*joueur.DestR_sprite.h;
+						update_farmes(&(joueur.farme),NBR_HORIS_IMAGE_HEROS,1);// 
+						joueur.SrcR_sprite.x = (LARGEUR_IMAGE_HEROS/NBR_HORIS_IMAGE_HEROS)*joueur.farme.cpt;
+						joueur.SrcR_sprite.y = HAUTEUR_IMAGE_HEROS-joueur.SrcR_sprite.w ;
 						break;
 
 					case SDLK_DOWN: 
-						joueur.DestR_sprite.y = joueur.DestR_sprite.y + 8 ;
+						joueur.DestR_sprite.y = joueur.DestR_sprite.y + 4 ;
 						if (collision_murs(joueur,t,ligne,colonne))
-							joueur.DestR_sprite.y = joueur.DestR_sprite.y - 8; 
+							joueur.DestR_sprite.y = (joueur.DestR_sprite.y/joueur.DestR_sprite.h)*joueur.DestR_sprite.h;
+						update_farmes(&(joueur.farme),NBR_HORIS_IMAGE_HEROS,0);// 
+						joueur.SrcR_sprite.x = (LARGEUR_IMAGE_HEROS/NBR_HORIS_IMAGE_HEROS)*joueur.farme.cpt;
+						joueur.SrcR_sprite.y = 0;
 						break;
+
 					case SDLK_LEFT: 
-						joueur.DestR_sprite.x  = joueur.DestR_sprite.x - 8 ;  
+						joueur.DestR_sprite.x  = joueur.DestR_sprite.x - 4 ;  
 						if (collision_murs(joueur,t,ligne,colonne))
-							joueur.DestR_sprite.x = joueur.DestR_sprite.x + 8; 
+							joueur.DestR_sprite.x = ((joueur.DestR_sprite.x/joueur.DestR_sprite.w)+1)*joueur.DestR_sprite.w; // pour le coller au murs si il ya une collision avec le mur le plus 1 car c'est a gauche 
+						update_farmes(&(joueur.farme),NBR_HORIS_IMAGE_HEROS,2);// 
+						joueur.SrcR_sprite.x = (LARGEUR_IMAGE_HEROS/NBR_HORIS_IMAGE_HEROS)*joueur.farme.cpt;
+						joueur.SrcR_sprite.y =HAUTEUR_IMAGE_HEROS-3*joueur.SrcR_sprite.w ;
 						break;
+
 					case SDLK_RIGHT:  
-						joueur.DestR_sprite.x  = joueur.DestR_sprite.x + 8 ; 
+						joueur.DestR_sprite.x  = joueur.DestR_sprite.x + 4 ; 
 						if (collision_murs(joueur,t,ligne,colonne))
-								joueur.DestR_sprite.x = joueur.DestR_sprite.x - 8; 
+								joueur.DestR_sprite.x = (joueur.DestR_sprite.x/joueur.DestR_sprite.w)*joueur.DestR_sprite.w; // pour le coller au murs si il ya une collision avec le mur 
+						update_farmes(&(joueur.farme),NBR_HORIS_IMAGE_HEROS,2);// *
+						joueur.SrcR_sprite.x = (LARGEUR_IMAGE_HEROS/NBR_HORIS_IMAGE_HEROS)*joueur.farme.cpt;
+						joueur.SrcR_sprite.y = HAUTEUR_IMAGE_HEROS-2*joueur.SrcR_sprite.w ;
 						break;
 				}	
 			}
-		depacemnt_bordure(&(joueur),ligne*32,colonne*32);
+		depacemnt_bordure(&(joueur),ligne*40,colonne*40);
 		SDL_RenderClear(ecran);
 		for (int i = 0; i < ligne; i++)
 		{

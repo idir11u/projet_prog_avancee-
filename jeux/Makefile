@@ -1,11 +1,11 @@
 CC = gcc
-CFLAGS = -W -Wall -ansi -std=c99 -g
+CFLAGS = -W -Wall -ansi -std=c99 -g  
 LIBS = -L./SDL2_ttf/.libs -L./SDL2_image/.libs
-LDFLAGS = `sdl2-config --cflags --libs` -lSDL2_ttf -lSDL2_image
+LDFLAGS = `sdl2-config --cflags --libs` -lSDL2_ttf -lSDL2_image -lm
 INCLUDES =  -I./SDL2_ttf -I./SDL2_image
-SCR = fonctions_SDL.h fonctions_fichiers.h gestion_terrain.h
+SCR = fonctions_SDL.h fonctions_fichiers.h gestion_terrain.h constante.h 
 EXEC = main
-SRC = main.c fonctions_SDL.c fonctions_fichiers.c gestion_terrain.c
+SRC = main.c fonctions_SDL.c fonctions_fichiers.c gestion_terrain.c 
 OBJ = $(SRC:.c=.o)
 
 all: $(EXEC)
@@ -16,5 +16,5 @@ main: $(OBJ)
 
 clean:
 	rm -rf *.o *~
-mrproper: cleanrm 
+mrproper: clean rm 
 	-rf $(EXEC)

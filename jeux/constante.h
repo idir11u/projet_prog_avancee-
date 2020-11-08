@@ -1,6 +1,6 @@
 /**
 * \file  constante.h
-* \author  Ait Aider Zinedine && Idir walid
+* \author  Ait Aider Zinedine && 
 * \Brief bibliotheque de constante. 
 */
 #ifndef CONSTANTE_H
