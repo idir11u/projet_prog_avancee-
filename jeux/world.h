@@ -7,14 +7,8 @@
 #ifndef WORLD_H
 #define  WORLD_H
 #include"gestion_terrain.h"
+#include"gestion_farmes.h"
 
-
-struct  farme_s 
-{
-	int cpt; //le numero de l'image actuel qu'on afffiche sur la ligne
-	int dist; // est la distination 0 DOWN / 1 UP / 2 LEFT / 3 RIGHT.
-};
-typedef struct farme_s farme_t;
 
 struct sprite_s 
 {
@@ -37,12 +31,10 @@ struct world_s
 
 typedef struct world_s world_t;
 
-void init_farme(farme_t *farme );
-void init_sprite(sprite_t * sprite  , int h_terrain ,int w_terrain);
+void init_sprite(sprite_t * sprite  , int h_terrain ,int w_terrain,int x,int y);
 void init_world(world_t *world);
 void depacemnt_bordure(sprite_t* sprite,int Hauteur_ecran,int Largeur_ecran);
 bool collision_murs(sprite_t sprite, terrain_t terrain, int ligne, int colonne);
-void update_farmes(farme_t *farme,int nbr_image_horisental,int i);
 void update_world(world_t *world);
 void clean_world(world_t *world);
 

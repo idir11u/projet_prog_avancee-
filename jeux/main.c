@@ -13,31 +13,25 @@
 #include "graphic.h"
 
 
+
 int main(int argc, char *argv[]){
 	
 	SDL_Window* fenetre;  // Déclaration de la fenêtre
 	SDL_Event evenements; // Événements liés à la fenêtre
 	SDL_Renderer* ecran ;
 	world_t world;
-	
-
 	init_SDL();
 	init_world(&world);
 	fenetre = creer_window(world.ligne,world.colonne);;
 	ecran = SDL_CreateRenderer(fenetre, -1, SDL_RENDERER_ACCELERATED);
 	//Charger l’image
 	init_textures(&world,ecran);
-	
-
 	while(!world.terminer)
 	{
 		handle_events(&world,&evenements);
 		update_data(&world);
 		refresh_graphic(&world,ecran);
 	}
-
-
-
 	clean_world(&world);
 	clear_textures(&world);
 	// Libération de l’écran (renderer)

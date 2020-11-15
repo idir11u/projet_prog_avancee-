@@ -56,7 +56,7 @@ void desallouer_SDL_Renderer_terrain(terrain_t *t,int ligne)
 
 void init_terrain(terrain_t* t,int ligne,int colonne,char ** tab)
 {
-
+	creer_SDL_Renderer_terrain(t,ligne,colonne);
 	for (int i = 0; i < ligne; i++)
 	{
 		for(int j=0; j<colonne; j++)
@@ -88,4 +88,5 @@ void init_terrain(terrain_t* t,int ligne,int colonne,char ** tab)
 			t->SrcR_terrain[i][j].h = 32;
 		}
 	}
+	
 }

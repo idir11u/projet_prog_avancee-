@@ -1,6 +1,6 @@
 /**
 * \file  fonctios_SDL.h
-* \author  Ait Aider Zinedine 
+* \author  Ait Aider Zinedine && Idir Walid Hakim
 * \Brief bibliotheque fonctios_SDL. 
 */
 #include<SDL2/SDL.h>

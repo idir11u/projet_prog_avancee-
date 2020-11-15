@@ -8,17 +8,18 @@
 #ifndef  GESTION_FARMES_H
 #define  GESTION_FARMES_H
 
-typedef struct  frame_s 
+struct  farme_s 
 {
-	int cpt; //le numero de l'image actuel qu'on afffiche sur la ligne.  
-	bool up;
-	bool down;
-	bool left;
-	bool right;
+	int cpt; //le numero de l'image actuel qu'on afffiche sur la ligne
+	int dist; // est la distination 0 DOWN / 1 UP / 2 LEFT / 3 RIGHT.
 };
-typedef struct frame_s frame_t;
+typedef struct farme_s farme_t;
 
 
-void init_farme(frame_t *frame);
+
+void init_farme(farme_t *frame);
+
+void update_farmes(farme_t *farme,int nbr_image_horisental,int i) ;// elle va etre appliquer si on a changer destination  
+
 
 #endif 

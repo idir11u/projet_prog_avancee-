@@ -1,10 +1,42 @@
 /**
 * \file  fonctios_SDL.c
-* \author  Ait Aider Zinedine 
+* \author  Ait Aider Zinedine && Idir Walid Hakim
 * \Brief bibliotheque d'fonctios_SDL . 
 */
+#include<stdio.h>
+#include<stdlib.h>
+#include<SDL2/SDL.h>
 
 #include"fonctions_SDL.h"
+
+void init_SDL()
+{
+	if(SDL_Init(SDL_INIT_VIDEO) < 0) // Initialisation de la SDL
+	{
+		printf("Erreur d’initialisation de la SDL: %s",SDL_GetError());
+		SDL_Quit();
+		return;
+	}
+}
+
+
+
+SDL_Window* creer_window(int ligne,int colonne){
+
+	SDL_Window *fenetre = SDL_CreateWindow("Fenetre SDL", SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,40*colonne,40*ligne, SDL_WINDOW_RESIZABLE);
+	if(fenetre == NULL) // En cas d’erreur
+	{
+		printf("Erreur de la creation d’une fenetre: %s",SDL_GetError());
+		SDL_Quit();
+		return NULL;
+	}
+	return fenetre;
+}
+
+
+
+
+
 /**
      * Chargement d'une image sur un rendu
      * @param nomFichier le nom de l'image au format Bitmap à charger 

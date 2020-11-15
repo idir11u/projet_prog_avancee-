@@ -6,28 +6,22 @@
 #include"gestion_terrain.h"
 #include"world.h"
 #include"constante.h"
+#include"gestion_farmes.h" 
 
 
 
-void init_farme(farme_t *farme )
+
+void init_sprite(sprite_t * sprite  , int h_terrain ,int w_terrain,int x,int y)
 {
-	farme->cpt = 0;
-	farme->dist = 0; //par defaut on met la distination down
-} 
-
-
-void init_sprite(sprite_t * sprite  , int h_terrain ,int w_terrain)
-{
-	sprite->DestR_sprite.x = 0;
-	sprite->DestR_sprite.y = 0;
+	sprite->DestR_sprite.x = x;
+	sprite->DestR_sprite.y = y;
 	sprite->DestR_sprite.h = h_terrain;	
 	sprite->DestR_sprite.w = w_terrain;
-	sprite->SrcR_sprite.x = 0;
-	sprite->SrcR_sprite.y = 0;
+	sprite->SrcR_sprite.x = x;
+	sprite->SrcR_sprite.y = y;
 	sprite->SrcR_sprite.w = LARGEUR_IMAGE_HEROS/ NBR_HORIS_IMAGE_HEROS;	
 	sprite->SrcR_sprite.h = HAUTEUR_IMAGE_HEROS / NBR_VERTIC_IMAGE_HEROS;
 	init_farme(&(sprite->farme));                                           //mazal
-
 }
 
 
@@ -39,7 +33,7 @@ void init_world(world_t *world)
 	taille_fichier("terrain.txt",&(world->ligne),&(world->colonne));
 	world->tab = lire_fichier("terrain.txt");
 	init_terrain(&(world->terrain),world->ligne,world->colonne,world->tab);
-	init_sprite(&(world->heros),world->terrain.DestR_terrain[0][0].h,world->terrain.DestR_terrain[0][0].w);
+	init_sprite(&(world->heros),world->terrain.DestR_terrain[0][0].h,world->terrain.DestR_terrain[0][0].w,0,0);
 
 }
 
@@ -76,37 +70,6 @@ bool collision_murs(sprite_t sprite, terrain_t terrain, int ligne, int colonne)
 		}
 	}
 	return false;	
-}
-
-void update_farmes(farme_t *farme,int nbr_image_horisental,int i)  // elle va etre appliquer si on a changer destination  
-{
-	if (farme->dist == i)
-	{
-		if (farme->cpt < nbr_image_horisental-1)//nbr_image_horisental)
-			farme->cpt ++;
-		else 
-			farme->cpt = 0;
-	}
-	else // est la distination  i = 0 DOWN / i = 1 UP / i = 2 LEFT / i = 3  RIGHT.
-	{
-		if (i == 0)
-		{
-			farme->dist = 0;
-		}
-		else if(i == 1) 
-		{
-			farme->dist = 1;
-		}
-		else if(i == 2)
-		{
-			farme->dist = 2;
-		}
-		else if(i == 3)
-		{
-			farme->dist = 3;
-		}
-		farme->cpt = 0;
-	}
 }
 
 void update_world(world_t *world)
