@@ -26,6 +26,10 @@ int main(int argc, char *argv[]){
 	ecran = SDL_CreateRenderer(fenetre, -1, SDL_RENDERER_ACCELERATED);
 	//Charger l’image
 	init_textures(&world,ecran);
+	for (int i = 0 ; i < world.terrain.chemin.nbr_sommet;i++)
+	{
+		printf("[%i]<---",world.terrain.chemin.tab[i]);
+	}
 	while(!world.terminer)
 	{
 		handle_events(&world,&evenements);

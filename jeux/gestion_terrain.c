@@ -4,6 +4,9 @@
 #include<SDL2/SDL.h>
 #include"fonctions_fichiers.h"
 #include"gestion_terrain.h"
+#include"graphes2.h"
+#include"chemin.h"
+
 
 /**
 *Allocation de deux tableaux à 2 dimensions pour les deux champs de t    (DestR_terrain et SrcR_terrain) de taille ligne *colonne
@@ -45,16 +48,18 @@ void desallouer_SDL_Renderer_terrain(terrain_t *t,int ligne)
 		free(t->SrcR_terrain[i]);
 	}
 	free(t->SrcR_terrain);
+	free(t->chemin.tab);
+
 }
 /**
 *Initialisation de deux tableaux à 2 dimensions pour les deux champs de t    (DestR_terrain et SrcR_terrain) de taille ligne *colonne a partir de tab
 *@param t une variable de type terrain_t
 *@param ligne nombre de ligne du fichier qui a partir du quel on constuit le terrain
 *@param colonne nombre de colonne du fichier qui a partir du quel on constuit le terrain
-*@param tab  tableau a 2 dimensions qui qu'ona initialisé a partir de la leture depuis le fichier 
+*@param tab  tableau a 2 dimensions qui qu'ona initialisé a partir de la leture depuis le fichier
 */
 
-void init_terrain(terrain_t* t,int ligne,int colonne,char ** tab)
+void init_terrain(terrain_t* t,int ligne,int colonne,char ** tab )
 {
 	creer_SDL_Renderer_terrain(t,ligne,colonne);
 	for (int i = 0; i < ligne; i++)
@@ -89,4 +94,33 @@ void init_terrain(terrain_t* t,int ligne,int colonne,char ** tab)
 		}
 	}
 	
+}
+
+/**
+*Initialisation de terrain avec chemin
+*@param t une variable de type terrain_t
+*@param ligne nombre de ligne du fichier qui a partir du quel on constuit le terrain
+*@param colonne nombre de colonne du fichier qui a partir du quel on constuit le terrain
+*@param tab  tableau a 2 dimensions qui qu'ona initialisé a partir de la leture depuis le fichier
+*@ param i c'est l'abscisse du heros
+*@ param j c'est l'ordonnée du heros
+*/
+
+
+void init_terrain_avec_chemin(terrain_t* t,int ligne,int colonne,char ** tab ,int i , int j)
+{
+	
+	Graphe g = allouer_graphe(ligne*colonne);
+	init_graphe(g,tab,ligne,colonne);
+	t->chemin.nbr_sommet = nbr_sommet_du_chemin(g,i*colonne+j,ligne*colonne);
+	t->chemin.tab= chemin_le_plus_grand_train(g,i*colonne+j ,ligne*colonne);
+	desallouer_graphe(g);
+	for(int i = 1 ; i<t->chemin.nbr_sommet-1 ; i++)
+	{
+		int x = t->chemin.tab[i]/colonne;
+		int y = t->chemin.tab[i]%colonne;
+		t->SrcR_terrain[x][y].x = 32*3;
+		t->SrcR_terrain[x][y].y = 0;
+
+	}
 }

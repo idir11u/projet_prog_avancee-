@@ -34,7 +34,7 @@ void init_world(world_t *world)
 	world->tab = lire_fichier("terrain.txt");
 	init_terrain(&(world->terrain),world->ligne,world->colonne,world->tab);
 	init_sprite(&(world->heros),world->terrain.DestR_terrain[0][0].h,world->terrain.DestR_terrain[0][0].w,0,0);
-
+	init_terrain_avec_chemin(&(world->terrain),world->ligne,world->colonne ,world->tab,world->heros.DestR_sprite.x ,world->heros.DestR_sprite.y);
 }
 
 void depacemnt_bordure(sprite_t* sprite,int Hauteur_ecran,int Largeur_ecran)
@@ -59,14 +59,15 @@ bool collision_murs(sprite_t sprite, terrain_t terrain, int ligne, int colonne)
 	{
 		for (int j = 0; j < colonne; ++j)
 		{
-			if (terrain.SrcR_terrain[i][j].x != 0 || terrain.SrcR_terrain[i][j].y != 0 ) // differente de la terre
-			{
-				x2 = terrain.DestR_terrain[i][j].x + terrain.DestR_terrain[i][j].w/2; // l'abscice du centre du du mur(i,j) 
-				y2 = terrain.DestR_terrain[i][j].y + terrain.DestR_terrain[i][j].h/2; // l'ordonnée du centre du du mur(i,j) 
-				if (abs(x1-x2) < (sprite.DestR_sprite.w + terrain.DestR_terrain[i][j].w)/2)
-					if (abs(y1-y2) < (sprite.DestR_sprite.h + terrain.DestR_terrain[i][j].h)/2)
-						return true;
-			}
+			if (terrain.SrcR_terrain[i][j].x !=0 || terrain.SrcR_terrain[i][j].y != 0 ) 
+			 	if (terrain.SrcR_terrain[i][j].x != 32*3 || terrain.SrcR_terrain[i][j].y != 0 ) // differente de la terre
+				{
+					x2 = terrain.DestR_terrain[i][j].x + terrain.DestR_terrain[i][j].w/2; // l'abscice du centre du du mur(i,j) 
+					y2 = terrain.DestR_terrain[i][j].y + terrain.DestR_terrain[i][j].h/2; // l'ordonnée du centre du du mur(i,j) 
+					if (abs(x1-x2) < (sprite.DestR_sprite.w + terrain.DestR_terrain[i][j].w)/2)
+						if (abs(y1-y2) < (sprite.DestR_sprite.h + terrain.DestR_terrain[i][j].h)/2)
+							return true;
+				}
 		}
 	}
 	return false;	

@@ -20,12 +20,13 @@ struct sprite_s
 typedef struct sprite_s sprite_t;
 
 struct world_s 
-{
+{	
+
 	bool terminer;
+	terrain_t terrain;
 	int ligne,colonne;//nombre de ligne et de colonne de la matrice q'on va lire depuis de fichier .txt du terrain
 	char ** tab; // la matrice de du jeux 
-	terrain_t terrain;
-	sprite_t heros; 
+	sprite_t heros;
 
 };
 
