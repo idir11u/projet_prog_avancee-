@@ -7,6 +7,14 @@
 #include "files.h"
 
 
+/**
+* Initialisation d'un graphe 
+* @param g pointeur sur la structure de gestion du graphe 
+* @param tab un tableau à 2 dimension de caractères qui définissent les sommets du graphe
+* @param ligne le nombre de lignes du tableau et du terrain
+* @param colonne le nombre de colonnes du tableau et du terrain
+*/
+
 void init_graphe(Graphe g,char** tab,int ligne, int colonne) // depuis une matrice 
 {
 	int cpt = 0;
@@ -16,33 +24,45 @@ void init_graphe(Graphe g,char** tab,int ligne, int colonne) // depuis une matri
 		{
 			if (tab[i][j] == '0')
 			{
-				if(j-1>=0 && tab[i][j-1]=='0')
+				if(j-1>=0 && tab[i][j-1]=='0') // test de la case de gauche (si c'est un murs ou pas )
 				{
-					ajouter_arete(g ,cpt,cpt-1);//   
+					ajouter_arete(g ,cpt,cpt-1);//
 												// pour faire un graphe orienté dans les deux sens
 					ajouter_arete(g ,cpt-1,cpt);//
 				}
-				if(j+1<=colonne-1 && tab[i][j+1]=='0')
+				if(j+1<=colonne-1 && tab[i][j+1]=='0') //test de la case de droite
 				{
-					ajouter_arete(g ,cpt,cpt+1);
+					ajouter_arete(g ,cpt,cpt+1);	
 					ajouter_arete(g ,cpt+1,cpt);
 				}
-				if(i-1>=0 && tab[i-1][j]=='0')
+				if(i-1>=0 && tab[i-1][j]=='0') //test de la case du haut  
 				{
 					ajouter_arete(g,cpt,cpt-colonne);
 					ajouter_arete(g,cpt-colonne,cpt);
 				}
-				if(i+1<=ligne-1 && tab[i+1][j]=='0')
+				if(i+1<=ligne-1 && tab[i+1][j]=='0') // test de la case du bas 
 				{
 					ajouter_arete(g,cpt,cpt+colonne);
 					ajouter_arete(g,cpt+colonne,cpt);
 				}
-				tab[i][j] = 'v';
+				tab[i][j] = 'v'; //on les considère comme visité 
 			}
-			cpt++;
+			cpt++;	// on passe au sommet suivant (compteur)
 		}
 	}
 }
+
+/*<------------------------------------------------------------------------------------------------->*/
+
+
+
+
+/**
+* calcul du nombre de sommet de graphes qui ne représentent pas des murs (chemin)
+* @param tab tableau de caractères représentant le terrain
+* @param ligne le nombre de lignes du tableau et du terrain
+* @param colonne le nombre de colonnes du tableau et du terrain
+*/
 
 int calcul_nbr_cases_chemain(char **tab,int ligne , int colonne)
 {
@@ -51,22 +71,32 @@ int calcul_nbr_cases_chemain(char **tab,int ligne , int colonne)
 	{
 		for (int j = 0; j <colonne ; j++)
 		{
-			if(tab[i][j]=='0')
-				cpt++;
+			if(tab[i][j]=='0')		
+				cpt++;		//décompte du nombre de de "non-murs"
 		}
 	}
 	return cpt;
 }
 
-//pere = le tableau des pere 
-//dist = le tableau de distance entre les sommet
-//coul = la couleur 0 i il n'est pas visiter 1 si il est dans la file et 2 si il est visité
-//sont tous des tableau deux dimension   
 
+
+
+/*<------------------------------------------------------------------------------------------------->*/
+
+
+
+
+/**
+* Parcours en largeur du graphe
+* @param g le graphe 
+* @param cpt le nombre de sommets utiles (element de chemin, qui ne sont pas des murs )
+* @param depart l'indice du sommet de départ 
+* @return le tableau des pères et des distances 
+*/
 int** parcours_en_largeur(Graphe g, int cpt, int depart)
 {	
 	File f=file_vide();
-	if (nbr_voisin_listAdjacence(g,depart)>0)
+	if (nbr_voisin_listAdjacence(g,depart)>0)	//enfiler le point de départ dans la file de traitement s'il a au moins un voisin 
 		enfiler(f,depart);
 	else
 		{
@@ -74,9 +104,10 @@ int** parcours_en_largeur(Graphe g, int cpt, int depart)
 			return NULL;
 		} 
 	
-	int* pere = malloc(cpt*sizeof(int));
-	int* dist = malloc(cpt*sizeof(int));
-	int* coul = malloc(cpt*sizeof(int));
+	int* pere = malloc(cpt*sizeof(int));//alloc du tableau des pères
+	int* dist = malloc(cpt*sizeof(int));//alloc du tableau des distances 
+	int* coul = malloc(cpt*sizeof(int));//tableau des couleurs (représente l'état des sommets du graphe: visité, 
+										// en cours de traitement, non visité)
 	
 	for(int i = 0; i < cpt ; i++)
 	{
@@ -89,7 +120,8 @@ int** parcours_en_largeur(Graphe g, int cpt, int depart)
 
 	}
 	dist[depart] =  0; // la distance entre le point de depart et le point de depart est 0	
-	while(!est_vide_file(f))
+	
+	while(!est_vide_file(f))		//algo du parcours en largeur
 	{
 		int sommet1 = tete_file(f);
 		Noeud* liste_voisin = g->Adjacence[sommet1].tete;
@@ -116,9 +148,22 @@ int** parcours_en_largeur(Graphe g, int cpt, int depart)
 	return tab;
 }
 
+
+/*<------------------------------------------------------------------------------------------------->*/
+
+
+
+/**
+* recherche de la distance entre le point de départ et le sommet le plus le plus éloigné 
+* @param g le graphe 
+* @param depart l'indice du point de depart du graphe 
+* @param cpt le nombre de sommets du graphe (qui ne sont pas des murs )
+* @return la distance entre le point de départ et le sommet le plus le plus éloigné 
+*/
+
 int nbr_sommet_du_chemin( Graphe g,int depart,int cpt)
 {
-	int max = 0;
+	int max = 0; 
 	int** tab = parcours_en_largeur(g,cpt,depart);
 	if(tab == NULL){
 		printf("la distance maximal est 0 dans il n'a pas de chemin\n");
@@ -139,6 +184,18 @@ int nbr_sommet_du_chemin( Graphe g,int depart,int cpt)
 	return max;
 }
 
+/*<------------------------------------------------------------------------------------------------->*/
+
+
+
+
+/**
+* recherche du chemin le plus court entre le sommet de départ et le sommet le plus éloigné
+* @param g le graphe 
+* @param depart le point de départ du graphe  
+* @param cpt le nombre de sommets 
+* @return le plus court chemin qui mène du point de départ au sommet le plus éloigné  
+*/
 
 int* chemin_le_plus_grand_train( Graphe g,int depart,int cpt)
 {
