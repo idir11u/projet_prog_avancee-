@@ -8,7 +8,7 @@
 #define  WORLD_H
 #include"gestion_terrain.h"
 #include"gestion_farmes.h"
-
+#include"ennemy.h" 
 
 struct sprite_s 
 {
@@ -16,26 +16,38 @@ struct sprite_s
 	SDL_Texture* image;
 	SDL_Rect SrcR_sprite;
 	SDL_Rect DestR_sprite;
+	int est_visible; // 1 si il est visble, 0 si il n'est pas visible
 };
 typedef struct sprite_s sprite_t;
 
-struct world_s 
-{	
+struct ennemy_s 
+{
+	sprite_t sprite;
+	
+};
+typedef struct ennemy_s ennemy_t;
 
+struct world_s 	
+{	
+	sprite_t ennemy;
 	bool terminer;
 	terrain_t terrain;
-	int ligne,colonne;//nombre de ligne et de colonne de la matrice q'on va lire depuis de fichier .txt du terrain
 	char ** tab; // la matrice de du jeux 
 	sprite_t heros;
-
+	int aller_retour;//pour l'ennemy 0 pour le retour et 1 pour l'aller
+	int indice_chemin_actuel;// pour l'ennemmy  ;
+	int ligne,colonne;//nombre de ligne et de colonne de la matrice q'on va lire depuis de fichier .txt du terrain
 };
 
 typedef struct world_s world_t;
 
-void init_sprite(sprite_t * sprite  , int h_terrain ,int w_terrain,int x,int y);
+void init_sprite(sprite_t * sprite  , int h_terrain ,int w_terrain,int x,int y,int large_img,int haut_img,int nbr_img_horis,int nbr_img_vetic);
 void init_world(world_t *world);
 void depacemnt_bordure(sprite_t* sprite,int Hauteur_ecran,int Largeur_ecran);
 bool collision_murs(sprite_t sprite, terrain_t terrain, int ligne, int colonne);
+bool collision(sprite_t sprite_1,sprite_t sprite_2 ); // pour la collision entre deux sprites 
+void visible (sprite_t * sprite);// pour rendre le sprite visible 
+void invisible (sprite_t * sprite); // pour rendre le sprite invisible 
 void update_world(world_t *world);
 void clean_world(world_t *world);
 
