@@ -5,12 +5,12 @@
 #include <stdbool.h>
 #include "fonctions_SDL.h"
 #include "fonctions_fichiers.h"
-#include "gestion_terrain.h"
 #include  "constante.h"
-#include <math.h>
 #include <stdbool.h>
 #include "world.h"
 #include "graphic.h"
+
+
 
 
 
@@ -33,8 +33,10 @@ int main(int argc, char *argv[]){
 	while(!world.terminer)
 	{
 		handle_events(&world,&evenements);
-		update_data(&world);
+		update_world(&world);
+		//world.ennemy.DestR_sprite.x++;
 		refresh_graphic(&world,ecran);
+		pause(15);// une pause du programe pendant 10 ms  
 	}
 	clean_world(&world);
 	clear_textures(&world);
