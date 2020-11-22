@@ -1,6 +1,6 @@
 /**
 * \file  fonctios_SDL.h
-* \author  Ait Aider Zinedine 
+* \author  Ait Aider Zinedine & Idir Walid
 * \Brief bibliotheque fonctios_SDL. 
 */
 
@@ -12,6 +12,7 @@ struct  farme_s
 {
 	int cpt; //le numero de l'image actuel qu'on afffiche sur la ligne
 	int dist; // est la distination 0 DOWN / 1 UP / 2 LEFT / 3 RIGHT.
+	int temp;	//temporisation de l'animation de marche
 };
 typedef struct farme_s farme_t;
 
@@ -19,7 +20,7 @@ typedef struct farme_s farme_t;
 
 void init_farme(farme_t *frame);
 
-void update_farmes(farme_t *farme,int nbr_image_horisental,int i) ;// elle va etre appliquer si on a changer destination  
+void update_farmes(farme_t *farme,int nbr_image_horisental,int i, int temps) ;// elle va etre appliquer si on a changer destination  
 
 
 #endif 
