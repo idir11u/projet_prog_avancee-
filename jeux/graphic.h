@@ -16,7 +16,4 @@ void update_data(world_t *world);
 void refresh_graphic(world_t *world,SDL_Renderer * renderer);
 void clear_textures(world_t *world);
 
-
-
-
 #endif 
