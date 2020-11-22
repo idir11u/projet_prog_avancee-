@@ -1,20 +1,17 @@
 /**
 * \file  fonctios_SDL.h
-* \author  Ait Aider Zinedine 
+* \author  Ait Aider Zinedine & Idir Walid
 * \Brief bibliotheque fonctios_SDL. 
 */
-#include<SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
 
-#ifndef FONCTIONS_SDL_H
-#define  FONCTIONS_SDL_H
+#ifndef FONCTIONS_FICHIERS_H
+#define  FONCTIONS_FICHIERS_H
 
-
-
-void init_SDL();
-// Déclaration de la fenêtre
-SDL_Window* creer_window(int ligne,int colonne);
-SDL_Texture* charger_image (const char* nomfichier, SDL_Renderer*renderer);
-SDL_Texture* charger_image_transparente(const char* nomfichier,SDL_Renderer* renderer,Uint8 r, Uint8 g, Uint8 b) ;
-SDL_Texture* charger_texte(const char* message, SDL_Renderer* renderer,TTF_Font *font, SDL_Color color) ;
+char** allouer_tab_2D(int n, int m);
+void desallouer_tab_2D(char** tab, int n);
+void afficher_tab_2D(char** tab, int n, int m);
+void taille_fichier(const char* nomFichier, int* nbLig, int* nbCol);
+char** lire_fichier(const char* nomFichier);
+char** modifier_caractere(char** tab, int n, int m, char ancien, char nouveau);
+void ecrire_fichier(const char* nomFichier, char** tab, int n, int m);
 #endif 
