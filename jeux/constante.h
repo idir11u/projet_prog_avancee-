@@ -36,6 +36,32 @@
 
 #define NBR_HORIS_IMAGE_HEROS  4
 
+
+
+/**
+ * \brief Largeur  de l'image du ennemy
+ */
+#define LARGEUR_IMAGE_ENNEMY 256
+
+/**
+ * \brief hauteur  de l'image du ennemy
+ */
+#define HAUTEUR_IMAGE_ENNEMY  256
+
+/**
+ * \ brief nombre de sequence image verticalement 
+ */
+#define NBR_VERTIC_IMAGE_ENNEMY  4
+
+/**
+ * \ brief nombre de sequence image horisental 
+ */
+
+#define NBR_HORIS_IMAGE_ENNEMY  4
+
+
+
+
 /**
  * \brief Largeur  de l'image du TRESOR
  */

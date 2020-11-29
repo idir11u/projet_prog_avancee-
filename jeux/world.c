@@ -35,7 +35,7 @@ void init_ennemies(world_t *world)
 		world->ennemies.aller_retour[0] = 0;
 		int y = world->terrain.DestR_terrain[0][0].h*(world->terrain.chemin.tab[world->ennemies.indice_chemin_actuel[0]]/world->colonne);//world->terrain.DestR_terrain[0][0].w * (world->terrain.chemin.tab[world->terrain.chemin.nbr_sommet/2]/world->colonne);
 		int x = world->terrain.DestR_terrain[0][0].w*(world->terrain.chemin.tab[world->ennemies.indice_chemin_actuel[0]]%world->colonne);//world->terrain.DestR_terrain[0][0].h * (world->terrain.chemin.tab[world->terrain.chemin.nbr_sommet/2]%world->colonne);
-		init_sprite(&(world->ennemies.sprite[0]),world->terrain.DestR_terrain[0][0].h,world->terrain.DestR_terrain[0][0].w,x,y,LARGEUR_IMAGE_HEROS, HAUTEUR_IMAGE_HEROS,NBR_HORIS_IMAGE_HEROS , NBR_VERTIC_IMAGE_HEROS);
+		init_sprite(&(world->ennemies.sprite[0]),world->terrain.DestR_terrain[0][0].h,world->terrain.DestR_terrain[0][0].w,x,y,LARGEUR_IMAGE_ENNEMY, HAUTEUR_IMAGE_ENNEMY,NBR_HORIS_IMAGE_ENNEMY, NBR_VERTIC_IMAGE_ENNEMY);
 	}
 	else if(world->ennemies.nbr_ennemies >= 2) 
 	{
@@ -48,7 +48,7 @@ void init_ennemies(world_t *world)
 			world->ennemies.aller_retour[i] = 0;
 			int y = world->terrain.DestR_terrain[0][0].h*(world->terrain.chemin.tab[world->ennemies.indice_chemin_actuel[i]]/world->colonne);//world->terrain.DestR_terrain[0][0].w * (world->terrain.chemin.tab[world->terrain.chemin.nbr_sommet/2]/world->colonne);
 			int x = world->terrain.DestR_terrain[0][0].w*(world->terrain.chemin.tab[world->ennemies.indice_chemin_actuel[i]]%world->colonne);//world->terrain.DestR_terrain[0][0].h * (world->terrain.chemin.tab[world->terrain.chemin.nbr_sommet/2]%world->colonne);
-			init_sprite(&(world->ennemies.sprite[i]),world->terrain.DestR_terrain[0][0].h,world->terrain.DestR_terrain[0][0].w,x,y,LARGEUR_IMAGE_HEROS, HAUTEUR_IMAGE_HEROS,NBR_HORIS_IMAGE_HEROS , NBR_VERTIC_IMAGE_HEROS);
+			init_sprite(&(world->ennemies.sprite[i]),world->terrain.DestR_terrain[0][0].h,world->terrain.DestR_terrain[0][0].w,x,y,LARGEUR_IMAGE_ENNEMY,HAUTEUR_IMAGE_ENNEMY,NBR_HORIS_IMAGE_ENNEMY, NBR_VERTIC_IMAGE_ENNEMY);
 		}
 	}
 } 

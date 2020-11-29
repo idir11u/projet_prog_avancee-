@@ -12,11 +12,11 @@ void init_textures(world_t *world,SDL_Renderer * renderer)
 	Uint8 r = 0, g = 255, b = 255;
 	world->terrain.image = charger_image_transparente("pavage.bmp", renderer,r,g,b);
 	world->heros.image = charger_image_transparente("sprite.bmp", renderer,r,g,b);
+	r = 255, g = 255, b = 255;
 	for(int i = 0; i< world->ennemies.nbr_ennemies; i++)
 	{
-		world->ennemies.sprite[i].image = charger_image_transparente("sprite.bmp", renderer,r,g,b);
+		world->ennemies.sprite[i].image = charger_image_transparente("ennemy.bmp", renderer,r,g,b);
 	}
-	r = 255, g = 255, b = 255;
 	world->tresor.image = charger_image_transparente("tresor.bmp", renderer,r,g,b);
 
 }
