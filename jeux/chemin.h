@@ -1,7 +1,7 @@
 /**
 * \file  fonctios_SDL.h
 * \author  Ait Aider Zinedine && Idir Walid Hakim
-* \Brief bibliotheque chemin. 
+* \Brief bibliotheque chemin.  
 */
 #include<SDL2/SDL.h>
 #ifndef CHEMIN_H

@@ -5,14 +5,11 @@
 #include <stdbool.h>
 #include "fonctions_SDL.h"
 #include "fonctions_fichiers.h"
-#include "gestion_terrain.h"
 #include  "constante.h"
-#include <math.h>
 #include <stdbool.h>
 #include "world.h"
 #include "graphic.h"
-
-
+#include "message.h"
 
 int main(int argc, char *argv[]){
 	
@@ -22,22 +19,29 @@ int main(int argc, char *argv[]){
 	world_t world;
 	init_SDL();
 	init_world(&world);
-	fenetre = creer_window(world.ligne,world.colonne);;
+	fenetre = creer_window(HAUTEUR_ECRAN,LARGEUR_ECRAN);
 	ecran = SDL_CreateRenderer(fenetre, -1, SDL_RENDERER_ACCELERATED);
+	TTF_Init();
+	TTF_Font *font = TTF_OpenFont("./arial.ttf",35);
+	message_t msg;
+	init_message(&msg,ecran,font);
 	//Charger l’image
 	init_textures(&world,ecran);
-	for (int i = 0 ; i < world.terrain.chemin.nbr_sommet;i++)
-	{
-		printf("[%i]<---",world.terrain.chemin.tab[i]);
-	}
+	printf("nbr ennemy %i\n",world.ennemies.nbr_ennemies);
 	while(!world.terminer)
 	{
 		handle_events(&world,&evenements);
-		update_data(&world);
-		refresh_graphic(&world,ecran);
+		update_world(&world);
+		//world.ennemy.DestR_sprite.x++;
+		refresh_graphic(&world,ecran,&msg);
+		pause(15);// une pause du programe pendant 10 ms  
 	}
 	clean_world(&world);
 	clear_textures(&world);
+	clean_message(&msg);
+	// Fermer la police et quitter SDL_ttf
+	TTF_CloseFont( font );
+	TTF_Quit();
 	// Libération de l’écran (renderer)
 	SDL_DestroyRenderer(ecran);
 	// Quitter SDL 

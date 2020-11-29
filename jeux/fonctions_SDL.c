@@ -21,9 +21,9 @@ void init_SDL()
 
 
 
-SDL_Window* creer_window(int ligne,int colonne){
+SDL_Window* creer_window(int hauteur,int largeur){
 
-	SDL_Window *fenetre = SDL_CreateWindow("Fenetre SDL", SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,40*colonne,40*ligne, SDL_WINDOW_RESIZABLE);
+	SDL_Window *fenetre = SDL_CreateWindow("Fenetre SDL", SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,hauteur,largeur,SDL_WINDOW_RESIZABLE);
 	if(fenetre == NULL) // En cas d’erreur
 	{
 		printf("Erreur de la creation d’une fenetre: %s",SDL_GetError());
@@ -92,4 +92,14 @@ SDL_Texture* charger_texte(const char* message, SDL_Renderer* renderer,TTF_Font 
 	texture = SDL_CreateTextureFromSurface(renderer ,texte);
 	return texture ;
 
+}
+
+
+/**
+ * \brief La fonction met le programme en pause pendant un laps de temps
+ * \param time ce laps de temps en milliseconde
+*/
+
+void pause(int time){
+    SDL_Delay(time);
 }
