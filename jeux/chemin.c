@@ -14,30 +14,30 @@ void init_graphe(Graphe g,char** tab,int ligne, int colonne) // depuis une matri
 	{
 		for (int j = 0; j <colonne ; j++)
 		{
-			if (tab[i][j] == '0')
+			if (tab[i][j] == '0' || tab[i][j] == 'p')
 			{
-				if(j-1>=0 && tab[i][j-1]=='0')
+				if(j-1>=0 && (tab[i][j-1]=='0' || tab[i][j-1]== 'p' ))
 				{
 					ajouter_arete(g ,cpt,cpt-1);//   
 												// pour faire un graphe orienté dans les deux sens
 					ajouter_arete(g ,cpt-1,cpt);//
 				}
-				if(j+1<=colonne-1 && tab[i][j+1]=='0')
+				if(j+1<=colonne-1 && (tab[i][j+1]=='0' || tab[i][j+1]=='p'))
 				{
 					ajouter_arete(g ,cpt,cpt+1);
 					ajouter_arete(g ,cpt+1,cpt);
 				}
-				if(i-1>=0 && tab[i-1][j]=='0')
+				if(i-1>=0 && (tab[i-1][j]=='0' || tab[i-1][j]=='p'))
 				{
 					ajouter_arete(g,cpt,cpt-colonne);
 					ajouter_arete(g,cpt-colonne,cpt);
 				}
-				if(i+1<=ligne-1 && tab[i+1][j]=='0')
+				if(i+1<=ligne-1 && (tab[i+1][j]=='0' || tab[i+1][j]=='p'))
 				{
 					ajouter_arete(g,cpt,cpt+colonne);
 					ajouter_arete(g,cpt+colonne,cpt);
 				}
-				tab[i][j] = 'v';
+				//tab[i][j] = 'v';
 			}
 			cpt++;
 		}
