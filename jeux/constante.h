@@ -85,6 +85,41 @@
 #define NBR_HORIS_IMAGE_TRESOR   4
 
 
+/**
+ * \ brief la valeur du tresor
+ */
+
+#define VALEUR_TRESOR   200
+
+
+
+/**
+ * \ brief la valeur d'une piece de money  
+ */
+
+#define VALEUR_PIECE_MONEY  20
+
+
+/**
+ * \brief Largeur  de l'image du piece
+ */
+#define LARGEUR_IMAGE_PIECE 1400
+
+/**
+ * \brief hauteur  de l'image du piece
+ */
+#define HAUTEUR_IMAGE_PIECE 256
+
+/**
+ * \ brief nombre de sequence de l'image piece  verticalement 
+ */
+#define NBR_VERTIC_IMAGE_PIECE  1
+
+/**
+ * \ brief nombre de sequence de l'image piece horisental 
+ */
+
+#define NBR_HORIS_IMAGE_PIECE  10
 
 
 
