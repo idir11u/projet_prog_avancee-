@@ -9,7 +9,6 @@
 
 
 
-
 void init_sprite(sprite_t * sprite,int h_terrain,int w_terrain,int x,int y,int large_img,int haut_img,int nbr_img_horis,int nbr_img_vetic)
 {
 	sprite->DestR_sprite.x = x;
@@ -22,6 +21,27 @@ void init_sprite(sprite_t * sprite,int h_terrain,int w_terrain,int x,int y,int l
 	sprite->SrcR_sprite.h = haut_img / nbr_img_vetic;
 	init_farme(&(sprite->farme));
 	sprite->est_visible = 1;                                 
+}
+
+void init_pieces_money(world_t *world)
+{
+	File file = file_vide();
+	world->monnaie.nbr_pieces = 0;
+	for(int i = 0 ; i<world->ligne ; i++)
+		for (int j = 0; j < world->colonne ; j++)
+			if(world->tab[i][j]== 'p')
+			{
+				world->monnaie.nbr_pieces++;
+				enfiler(file, world->colonne *i + j);
+			}
+	if (world->monnaie.nbr_pieces > 0)
+		world->monnaie.pieces = malloc(world->monnaie.nbr_pieces*sizeof(sprite_t));
+	for(int i= 0 ; i < world->monnaie.nbr_pieces; i++)
+	{
+		init_sprite(&(world->monnaie.pieces[i]),world->terrain.DestR_terrain[0][0].h,world->terrain.DestR_terrain[0][0].w,world->terrain.DestR_terrain[0][0].w*(tete_file(file)%world->colonne),world->terrain.DestR_terrain[0][0].h*(tete_file(file)/world->colonne),LARGEUR_IMAGE_PIECE,HAUTEUR_IMAGE_PIECE , 10 ,NBR_VERTIC_IMAGE_PIECE);
+		defiler(file);
+	}
+	effacer_file(file);
 }
 
 void init_ennemies(world_t *world)
@@ -55,7 +75,8 @@ void init_ennemies(world_t *world)
 
 void init_world(world_t *world)
 {
-	world->terminer = false ; 
+	world->terminer = false ;
+	world->score = 0; 
 	taille_fichier("terrain.txt",&(world->ligne),&(world->colonne));
 	world->tab = lire_fichier("terrain.txt");
 	init_terrain(&(world->terrain),world->ligne,world->colonne,world->tab);
@@ -65,6 +86,7 @@ void init_world(world_t *world)
 	int y = (world->terrain.chemin.tab[0]/world->colonne)*world->terrain.DestR_terrain[0][0].h;
 	int x = (world->terrain.chemin.tab[0]%world->colonne)*world->terrain.DestR_terrain[0][0].w;
 	init_sprite(&(world->tresor),world->terrain.DestR_terrain[0][0].h,world->terrain.DestR_terrain[0][0].w,x,y,LARGEUR_IMAGE_TRESOR, HAUTEUR_IMAGE_TRESOR,4 , 1);
+	init_pieces_money(world);
 }
 
 void depacemnt_bordure(sprite_t* sprite,int Hauteur_ecran,int Largeur_ecran)
@@ -153,7 +175,6 @@ void demarche_ennemies(world_t *world)
 							else if (y_prochain<world->ennemies.sprite[i].DestR_sprite.y)
 							{
 								world->ennemies.sprite[i].DestR_sprite.y--;
-								//update_farmes(&(world->ennemies.sprite[i].farme),3,0) ;
 								update_farmes(&(world->ennemies.sprite[i].farme),NBR_HORIS_IMAGE_HEROS,0,5);// 
 								world->ennemies.sprite[i].SrcR_sprite.x = (LARGEUR_IMAGE_HEROS/NBR_HORIS_IMAGE_HEROS)*world->ennemies.sprite[i].farme.cpt;
 								world->ennemies.sprite[i].SrcR_sprite.y = HAUTEUR_IMAGE_HEROS-world->heros.SrcR_sprite.w;
@@ -164,7 +185,6 @@ void demarche_ennemies(world_t *world)
 							if(x_prochain>world->ennemies.sprite[i].DestR_sprite.x)
 							{
 								world->ennemies.sprite[i].DestR_sprite.x++;
-								//update_farmes(&(world->ennemies.sprite[i].farme),3,3) ;
 								update_farmes(&(world->ennemies.sprite[i].farme),NBR_HORIS_IMAGE_HEROS,3,5);// 
 								world->ennemies.sprite[i].SrcR_sprite.x = (LARGEUR_IMAGE_HEROS/NBR_HORIS_IMAGE_HEROS)*world->ennemies.sprite[i].farme.cpt;
 								world->ennemies.sprite[i].SrcR_sprite.y = HAUTEUR_IMAGE_HEROS-2*world->heros.SrcR_sprite.w ;
@@ -172,7 +192,6 @@ void demarche_ennemies(world_t *world)
 							else if (x_prochain<world->ennemies.sprite[i].DestR_sprite.x)
 							{
 								world->ennemies.sprite[i].DestR_sprite.x--;
-								//update_farmes(&(world->ennemies.sprite[i].farme),3,2) ;
 								update_farmes(&(world->ennemies.sprite[i].farme),NBR_HORIS_IMAGE_HEROS,2,5);// 
 								world->ennemies.sprite[i].SrcR_sprite.x = (LARGEUR_IMAGE_HEROS/NBR_HORIS_IMAGE_HEROS)*world->ennemies.sprite[i].farme.cpt;
 								world->ennemies.sprite[i].SrcR_sprite.y = HAUTEUR_IMAGE_HEROS-3*world->heros.SrcR_sprite.w ;
@@ -184,9 +203,8 @@ void demarche_ennemies(world_t *world)
 				else 
 				{
 					world->ennemies.indice_chemin_actuel[i] = 1;
-					world->ennemies.aller_retour[i] = 1 ;
+					world->ennemies.aller_retour[i] = 1;
 				}
-
 			}else if (world->ennemies.aller_retour[i] == 1)	
 			{
 				y_prochain = world->terrain.DestR_terrain[0][0].h*(world->terrain.chemin.tab[world->ennemies.indice_chemin_actuel[i]+1]/world->colonne);
@@ -206,7 +224,6 @@ void demarche_ennemies(world_t *world)
 							else if (y_prochain<world->ennemies.sprite[i].DestR_sprite.y)
 							{
 								world->ennemies.sprite[i].DestR_sprite.y--;
-								//update_farmes(&(world->ennemies.sprite[i].farme),3,0) ;
 								update_farmes(&(world->ennemies.sprite[i].farme),NBR_HORIS_IMAGE_HEROS,0,5);// 
 								world->ennemies.sprite[i].SrcR_sprite.x = (LARGEUR_IMAGE_HEROS/NBR_HORIS_IMAGE_HEROS)*world->ennemies.sprite[i].farme.cpt;
 								world->ennemies.sprite[i].SrcR_sprite.y = HAUTEUR_IMAGE_HEROS-world->heros.SrcR_sprite.w;
@@ -217,14 +234,12 @@ void demarche_ennemies(world_t *world)
 						if(x_prochain>world->ennemies.sprite[i].DestR_sprite.x)
 						{
 							world->ennemies.sprite[i].DestR_sprite.x++;
-							//update_farmes(&(world->ennemies.sprite[i].farme),3,3) ;
 							update_farmes(&(world->ennemies.sprite[i].farme),NBR_HORIS_IMAGE_HEROS,3,5);// 
 							world->ennemies.sprite[i].SrcR_sprite.x = (LARGEUR_IMAGE_HEROS/NBR_HORIS_IMAGE_HEROS)*world->ennemies.sprite[i].farme.cpt;
 							world->ennemies.sprite[i].SrcR_sprite.y = HAUTEUR_IMAGE_HEROS-2*world->heros.SrcR_sprite.w ;
 						}
 						else if (x_prochain<world->ennemies.sprite[i].DestR_sprite.x){
 							world->ennemies.sprite[i].DestR_sprite.x--;
-							//update_farmes(&(world->ennemies.sprite[i].farme),3,2) ;
 							update_farmes(&(world->ennemies.sprite[i].farme),NBR_HORIS_IMAGE_HEROS,2,5);// 
 							world->ennemies.sprite[i].SrcR_sprite.x = (LARGEUR_IMAGE_HEROS/NBR_HORIS_IMAGE_HEROS)*world->ennemies.sprite[i].farme.cpt;
 							world->ennemies.sprite[i].SrcR_sprite.y = HAUTEUR_IMAGE_HEROS-3*world->heros.SrcR_sprite.w ;
@@ -235,8 +250,8 @@ void demarche_ennemies(world_t *world)
 				}
 				else 
 				{
-					world->ennemies.indice_chemin_actuel[i] = world->terrain.chemin.nbr_sommet-1 ;
-					world->ennemies.aller_retour[i] = 0 ;
+					world->ennemies.indice_chemin_actuel[i] = world->terrain.chemin.nbr_sommet-1;
+					world->ennemies.aller_retour[i] = 0;
 				}
 			}
 		}
@@ -256,12 +271,20 @@ void update_world(world_t *world)
 		}
 		demarche_ennemies(world);
 	}
+	for(int i = 0 ; i<world->monnaie.nbr_pieces ;i++){
+			if (collision(&(world->heros),&(world->monnaie.pieces[i])) && world->heros.est_visible == 1  && 1 == world->monnaie.pieces[i].est_visible)
+			{
+				invisible (&(world->monnaie.pieces[i]));
+				world->score = world->score + VALEUR_PIECE_MONEY ;			
+			}
+		}
 
 }
 
 void clean_world(world_t *world)
 {
 	free(world->ennemies.sprite);
+	free(world->monnaie.pieces);
 	free(world->ennemies.aller_retour);
 	free(world->ennemies.indice_chemin_actuel);
 	desallouer_tab_2D(world->tab,world->ligne);
