@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-
 #include "fonctions_SDL.h"
 #include"world.h"
 #include"constante.h"
@@ -16,6 +15,10 @@ void init_textures(world_t *world,SDL_Renderer * renderer)
 	for(int i = 0; i< world->ennemies.nbr_ennemies; i++)
 	{
 		world->ennemies.sprite[i].image = charger_image_transparente("ennemy.bmp", renderer,r,g,b);
+	}
+	for(int i = 0; i< world->monnaie.nbr_pieces; i++)
+	{
+		world->monnaie.pieces[i].image = charger_image_transparente("piece.bmp", renderer,r,g,b);
 	}
 	world->tresor.image = charger_image_transparente("tresor.bmp", renderer,r,g,b);
 
@@ -68,39 +71,51 @@ void handle_events(world_t *world,SDL_Event *evenements)
 						if (world->heros.est_visible == 1 && !collision(&(world->heros),&(world->tresor))){
 							world->heros.DestR_sprite.x  = world->heros.DestR_sprite.x + 4 ; 
 							if (collision_murs(world->heros,world->terrain,world->ligne,world->colonne))
-									world->heros.DestR_sprite.x = (world->heros.DestR_sprite.x/world->heros.DestR_sprite.w)*world->heros.DestR_sprite.w; // pour le coller au murs si il ya une collision avec le mur 
+								world->heros.DestR_sprite.x = (world->heros.DestR_sprite.x/world->heros.DestR_sprite.w)*world->heros.DestR_sprite.w; // pour le coller au murs si il ya une collision avec le mur 
 							update_farmes(&(world->heros.farme),NBR_HORIS_IMAGE_HEROS,3,2);// *
 							world->heros.SrcR_sprite.x = (LARGEUR_IMAGE_HEROS/NBR_HORIS_IMAGE_HEROS)*world->heros.farme.cpt;
 							world->heros.SrcR_sprite.y = HAUTEUR_IMAGE_HEROS-2*world->heros.SrcR_sprite.w ;
 						}
-						break;
-					
+					break;
 				} 
-				
 			}
 }
 
 void update_data(world_t *world)
 {
-		depacemnt_bordure(&(world->heros),world->ligne*40,world->colonne*40);
+	depacemnt_bordure(&(world->heros),world->ligne*40,world->colonne*40);
 }
 
-void refresh_graphic(world_t *world,SDL_Renderer * renderer,message_t *msg)
+
+
+void refresh_graphic(world_t *world,SDL_Renderer * renderer,TTF_Font *font,message_t *msg)
 {
 	SDL_RenderClear(renderer);
-	
 	for (int i = 0; i < world->ligne; i++)
 	{
 		for (int j=0 ; j<world->colonne ; j++)
 		{
-			SDL_RenderCopy(renderer,world->terrain.image, &(world->terrain.SrcR_terrain[i][j]),&(world->terrain.DestR_terrain[i][j]));
+			SDL_RenderCopy(renderer,world->terrain.image,&(world->terrain.SrcR_terrain[i][j]),&(world->terrain.DestR_terrain[i][j]));
 		}
 	}
 	for(int i = 0 ; i<world->ennemies.nbr_ennemies;i++)
 	{
 		if(world->ennemies.sprite[i].est_visible == 1)
 		{
-			SDL_RenderCopy(renderer,world->ennemies.sprite[i].image, &(world->ennemies.sprite[i].SrcR_sprite), &(world->ennemies.sprite[i].DestR_sprite) );
+			SDL_RenderCopy(renderer,world->ennemies.sprite[i].image,&(world->ennemies.sprite[i].SrcR_sprite),&(world->ennemies.sprite[i].DestR_sprite) );
+		}
+	
+	}
+
+	for(int i = 0 ; i<world->monnaie.nbr_pieces;i++)
+	{
+		if(world->monnaie.pieces[i].est_visible == 1)
+		{
+			SDL_RenderCopy(renderer,world->monnaie.pieces[i].image, &(world->monnaie.pieces[i].SrcR_sprite), &(world->monnaie.pieces[i].DestR_sprite));
+			update_farmes(&(world->monnaie.pieces[i].farme),NBR_HORIS_IMAGE_PIECE,0,10);
+			world->monnaie.pieces[i].SrcR_sprite.x = (LARGEUR_IMAGE_PIECE/NBR_HORIS_IMAGE_PIECE)*world->monnaie.pieces[i].farme.cpt;
+			world->monnaie.pieces[i].SrcR_sprite.y = 0 ;
+
 		}
 	
 	}
@@ -116,6 +131,10 @@ void refresh_graphic(world_t *world,SDL_Renderer * renderer,message_t *msg)
 	{
 		if (world->tresor.farme.cpt<3)
 		{
+			if(world->tresor.farme.cpt  <2 )
+			{
+				world->score = world->score + VALEUR_PIECE_MONEY ;			
+			}
 			if(world->tresor.farme.cpt == 2)
 			{
 				world->tresor.farme.stop = true;
@@ -127,9 +146,13 @@ void refresh_graphic(world_t *world,SDL_Renderer * renderer,message_t *msg)
 		}		
 	}
 	if(world->tresor.farme.stop)
-	{
-		SDL_RenderCopy(renderer,msg->you_win.text,NULL,&(msg->game_over.DestR_text));
-	}
+	{	
+		SDL_RenderCopy(renderer,msg->you_win.text,NULL,&(msg->you_win.DestR_text));
+	}		
+	SDL_RenderCopy(renderer,msg->score.text,NULL,&(msg->score.DestR_text));
+	update_message(&(msg->score_chiffre),renderer,font,world->score);
+	SDL_RenderCopy(renderer,msg->score_chiffre.text,NULL,&(msg->score_chiffre.DestR_text));
+
 	SDL_RenderPresent(renderer);
 }
 
@@ -143,6 +166,10 @@ void clear_textures(world_t *world)
 	for(int i = 0; i< world->ennemies.nbr_ennemies; i++)
 	{
 		SDL_DestroyTexture(world->ennemies.sprite[i].image);
+	}
+	for(int i = 0; i< world->monnaie.nbr_pieces; i++)
+	{
+		SDL_DestroyTexture(world->monnaie.pieces[i].image);
 	}
 	SDL_DestroyTexture(world->tresor.image);
 }
