@@ -21,6 +21,6 @@ struct text_s
 typedef struct text_s text_t;
 
 void init_text_SDL_Rect(text_t* text,int x,int y,int w,int h);
-void init_text(text_t *txt,const char* text_afficher,SDL_Renderer* renderer,TTF_Font *font,int x,int y,int w,int h);
 
+void init_text(text_t *txt,const char* text_afficher,SDL_Renderer* renderer,TTF_Font *font,int x,int y,int w,int h);
 #endif 

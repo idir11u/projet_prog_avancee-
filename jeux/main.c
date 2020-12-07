@@ -28,12 +28,14 @@ int main(int argc, char *argv[]){
 	//Charger l’image
 	init_textures(&world,ecran);
 	printf("nbr ennemy %i\n",world.ennemies.nbr_ennemies);
+	printf("ligne   %i colonne %i \n",world.ligne , world.colonne);
+
 	while(!world.terminer)
 	{
 		handle_events(&world,&evenements);
 		update_world(&world);
 		//world.ennemy.DestR_sprite.x++;
-		refresh_graphic(&world,ecran,&msg);
+		refresh_graphic(&world,ecran,font,&msg);
 		pause(15);// une pause du programe pendant 10 ms  
 	}
 	clean_world(&world);

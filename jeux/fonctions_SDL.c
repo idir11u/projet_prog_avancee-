@@ -87,11 +87,10 @@ SDL_Texture* charger_image_transparente(const char* nomfichier,SDL_Renderer* ren
 SDL_Texture* charger_texte(const char* message, SDL_Renderer* renderer,TTF_Font *font, SDL_Color color) 
 {
 	SDL_Texture *texture = NULL;
-	SDL_Surface *texte ;
+	SDL_Surface *texte;
 	texte = TTF_RenderText_Solid(font,message,color);
 	texture = SDL_CreateTextureFromSurface(renderer ,texte);
-	return texture ;
-
+	return texture;
 }
 
 

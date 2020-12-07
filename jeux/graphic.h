@@ -14,7 +14,7 @@
 void init_textures(world_t *world,SDL_Renderer * renderer);
 void handle_events(world_t *world,SDL_Event *evenements);
 void update_data(world_t *world);
-void refresh_graphic(world_t *world,SDL_Renderer * renderer,message_t *msg);
+void refresh_graphic(world_t *world,SDL_Renderer * renderer,TTF_Font *font,message_t *msg);
 void clear_textures(world_t *world);
 
 
