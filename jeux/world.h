@@ -19,6 +19,14 @@ struct sprite_s
 };
 typedef struct sprite_s sprite_t;
 
+struct  money_s
+{
+	sprite_t * pieces ; // tableau de sptrit
+	int nbr_pieces; 
+	int valeur;
+};
+typedef struct  money_s money_t;
+
 struct ennemy_s 
 {
 	sprite_t *sprite; //tableau de sprite 
@@ -31,13 +39,15 @@ typedef struct ennemy_s ennemy_t;
 
 struct world_s 	
 {	
-	ennemy_t ennemies ;
+	int ligne,colonne;//nombre de ligne et de colonne de la matrice q'on va lire depuis de fichier .txt du terrain
+	ennemy_t ennemies;
+	money_t monnaie;
 	sprite_t tresor; 
 	bool terminer;
 	terrain_t terrain;
-	char ** tab; // la matrice de du jeux 
+	char ** tab; //la matrice de du jeux 
 	sprite_t heros;
-	int ligne,colonne;//nombre de ligne et de colonne de la matrice q'on va lire depuis de fichier .txt du terrain
+	int score; //le score de la partie 	
 };
 
 typedef struct world_s world_t;
