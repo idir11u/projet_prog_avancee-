@@ -123,5 +123,27 @@
 
 
 
+/**
+ * \ brief hauteur de l'image du backgroung
+ */
+#define BACKGROUND_HAUTEUR  2500
+
+/**
+ * \ brief largeur de l'image du backgroung
+ */
+
+#define  BACKGROUND_LARGEUR 3000
+
+/**
+ * \ brief hauteur de l'image  image_start
+ */
+#define IMAGE_START_HAUTEUR  80
+
+/**
+ * \ brief largeur de l'image image_start
+ */
+
+#define  IMAGE_START_LARGEUR 195
+
 
 #endif 
