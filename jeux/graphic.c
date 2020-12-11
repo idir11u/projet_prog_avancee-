@@ -92,23 +92,19 @@ void handle_events(jeu_t *jeu,world_t *world,SDL_Event *evenements)
                     		{
                     			jeu->start = true;
                 			}
-                    	
-                    	/*	
-                    	// quand on clic sur le boutton score
-                    	if(event.button.x>dst_score.x && event.button.x<dst_score.x+dst_score.w && event.button.y>dst_score.y && event.button.y<dst_score.y+dst_score.h)
-                    	{
-                    	
-                    		play_son(rifle);
-                    	}
+                    	if(evenements->button.x> jeu->image_quit.DestR_image.x && evenements->button.x<jeu->image_quit.DestR_image.x+jeu->image_quit.DestR_image.w )
+							if(evenements->button.y> jeu->image_quit.DestR_image.y && evenements->button.y < jeu->image_quit.DestR_image.y+jeu->image_quit.DestR_image.h)
+                    		{
+								if(!jeu->start && !jeu->score)
+									world->terminer = true;
+                			}
+						if(evenements->button.x> jeu->image_score.DestR_image.x && evenements->button.x<jeu->image_score.DestR_image.x+jeu->image_score.DestR_image.w )
+							if(evenements->button.y> jeu->image_score.DestR_image.y && evenements->button.y < jeu->image_score.DestR_image.y+jeu->image_score.DestR_image.h)
+                    		{
+								if(!jeu->Quit && !jeu->start)
+                    				jeu->score = true;
+                			}
 
-
-                    	//quand on clic sur le boutton quitter
-                    	if(event.button.x>dst_quit.x && event.button.x<dst_quit.x+dst_quit.w && event.button.y>dst_quit.y && event.button.y<dst_quit.y+dst_quit.h)
-                    	{
-            				play_son(rifle);
-            				SDL_Delay(500);
-                    		running = 0;
-                    	}*/
                     }
 			}
 		}
@@ -124,14 +120,23 @@ void update_data(world_t *world)
 void refresh_graphic(jeu_t *jeu,world_t *world,SDL_Renderer * renderer,TTF_Font *font,message_t *msg)
 {
 	SDL_RenderClear(renderer);
-	if(!jeu->start)
+	if(!jeu->start )
 	{
 		SDL_RenderCopy(renderer,jeu->background.image,&(jeu->background.SrcR_image),&(jeu->background.DestR_image));
 		SDL_RenderCopy(renderer,jeu->image_start.image,&(jeu->image_start.SrcR_image),&(jeu->image_start.DestR_image));
 		SDL_RenderCopy(renderer,jeu->image_score.image,&(jeu->image_score.SrcR_image),&(jeu->image_score.DestR_image));
 		SDL_RenderCopy(renderer,jeu->image_quit.image,&(jeu->image_quit.SrcR_image),&(jeu->image_quit.DestR_image));
 	}
-	if(jeu->start){
+	if(jeu->score )
+	{		
+		SDL_RenderCopy(renderer,jeu->background.image,&(jeu->background.SrcR_image),&(jeu->background.DestR_image));
+		for(int i=0 ; i <7 ; i++){
+		SDL_RenderCopy(renderer,msg->best_score[i].text,NULL,&(msg->best_score[i].DestR_text));
+		}
+
+	}		
+
+	if(jeu->start ){
 		for (int i = 0; i < world->ligne; i++)
 		{
 			for (int j=0 ; j<world->colonne ; j++)
@@ -145,7 +150,6 @@ void refresh_graphic(jeu_t *jeu,world_t *world,SDL_Renderer * renderer,TTF_Font 
 			{
 				SDL_RenderCopy(renderer,world->ennemies.sprite[i].image,&(world->ennemies.sprite[i].SrcR_sprite),&(world->ennemies.sprite[i].DestR_sprite) );
 			}
-		
 		}
 
 		for(int i = 0 ; i<world->monnaie.nbr_pieces;i++)
@@ -155,10 +159,8 @@ void refresh_graphic(jeu_t *jeu,world_t *world,SDL_Renderer * renderer,TTF_Font 
 				SDL_RenderCopy(renderer,world->monnaie.pieces[i].image, &(world->monnaie.pieces[i].SrcR_sprite), &(world->monnaie.pieces[i].DestR_sprite));
 				update_farmes(&(world->monnaie.pieces[i].farme),NBR_HORIS_IMAGE_PIECE,0,10);
 				world->monnaie.pieces[i].SrcR_sprite.x = (LARGEUR_IMAGE_PIECE/NBR_HORIS_IMAGE_PIECE)*world->monnaie.pieces[i].farme.cpt;
-				world->monnaie.pieces[i].SrcR_sprite.y = 0 ;
-
+				world->monnaie.pieces[i].SrcR_sprite.y = 0;
 			}
-		
 		}
 
 		if(world->heros.est_visible == 1) 
@@ -191,7 +193,7 @@ void refresh_graphic(jeu_t *jeu,world_t *world,SDL_Renderer * renderer,TTF_Font 
 			SDL_RenderCopy(renderer,msg->you_win.text,NULL,&(msg->you_win.DestR_text));
 		}		
 		SDL_RenderCopy(renderer,msg->score.text,NULL,&(msg->score.DestR_text));
-		//update_message(&(msg->score_chiffre),renderer,font,world->score);
+		update_message(&(msg->score_chiffre),renderer,font,world->score);
 		SDL_RenderCopy(renderer,msg->score_chiffre.text,NULL,&(msg->score_chiffre.DestR_text));
 
 	}

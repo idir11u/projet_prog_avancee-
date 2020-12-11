@@ -90,6 +90,7 @@ SDL_Texture* charger_texte(const char* message, SDL_Renderer* renderer,TTF_Font 
 	SDL_Surface *texte;
 	texte = TTF_RenderText_Solid(font,message,color);
 	texture = SDL_CreateTextureFromSurface(renderer ,texte);
+	SDL_FreeSurface(texte);
 	return texture;
 }
 

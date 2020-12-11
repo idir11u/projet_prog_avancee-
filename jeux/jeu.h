@@ -24,9 +24,10 @@ typedef struct image_s image_t;
 struct jeu_s
 {
 	bool start;
+	bool score;
 	bool Quit;
-	world_t world;
-	message_t message;
+	//world_t world;
+	//message_t message;
 	image_t background;
 	image_t image_start;
 	image_t image_score;

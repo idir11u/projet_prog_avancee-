@@ -16,5 +16,5 @@ main: $(OBJ)
 
 clean:
 	rm -rf *.o *~
-mrproper: clean 
-	rm -rf $(EXEC)
+mrproper: clean rm 
+	-rf $(EXEC)

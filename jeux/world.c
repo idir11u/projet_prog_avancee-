@@ -149,6 +149,8 @@ bool collision(sprite_t *sprite_1,sprite_t *sprite_2 )
 	return false;
 }
 
+
+
 void demarche_ennemies(world_t *world)
 {
 	int x_prochain; // c'est pour trouver les cordoner du prchainn 

@@ -28,6 +28,8 @@ void init_jeux(jeu_t *jeu)
 {
 	jeu->start = false;
 	jeu->Quit = false;
+	jeu->score = false;
+
 	init_XYWH(&(jeu->background.SrcR_image),0,0,BACKGROUND_LARGEUR,BACKGROUND_HAUTEUR);
 	init_XYWH(&(jeu->background.DestR_image),0,0,LARGEUR_ECRAN,HAUTEUR_ECRAN);
 

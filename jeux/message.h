@@ -20,7 +20,7 @@ struct message_s
 	text_t you_win;
 	text_t score;
 	text_t score_chiffre;
-
+	text_t best_score[7];
 };
 typedef struct message_s message_t;	
 
