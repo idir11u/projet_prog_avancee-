@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include<string.h>
+#include <string.h>
+#include <stdbool.h>
+
 #include"fonctions_fichiers.h"
 
 /**
@@ -146,6 +148,40 @@ char** lire_fichier(const char* nomFichier)
 	return tab;
 }
 
+void lire_best_score(const char* nomFichier,int *tab)
+{
+	FILE* fichier =  fopen(nomFichier,"a+");
+	char c = fgetc(fichier);
+	fclose(fichier);
+
+	if (c!= EOF)
+	{
+		fichier =  fopen(nomFichier,"r");
+		fscanf(fichier, "les meilleurs scores sont %i %i %i\n",&tab[0],&tab[1],&tab[2]);
+		fclose(fichier);
+	}
+	else
+	{ 
+		fichier =  fopen(nomFichier,"w+");
+		tab[0]= 0; 
+		tab[1]= 0;
+		tab[2]= 0;
+		fprintf(fichier,"les meilleurs scores sont %i %i %i\n",tab[0],tab[1],tab[2]);
+		fclose(fichier);
+	}
+
+	
+}
+
+void ecrire_best_score(const char* nomFichier,int *tab)
+{
+	FILE* fichier =  fopen(nomFichier,"w+");
+	if (fichier != 0)
+	{
+		fprintf(fichier, "les meilleurs scores sont %i %i %i\n",tab[0],tab[1],tab[2]);
+   	}
+	fclose(fichier);
+}
 
 /**
 *Modifier un caractère présent dans un tableau par un autre 

@@ -14,6 +14,7 @@ void init_textures(jeu_t *jeu,world_t *world,SDL_Renderer * renderer)
 	world->terrain.image = charger_image_transparente("pavage.bmp", renderer,r,g,b);
 	world->heros.image = charger_image_transparente("sprite.bmp", renderer,r,g,b);
 	r = 255, g = 255, b = 255;
+	world->tresor.image = charger_image_transparente("tresor.bmp", renderer,r,g,b);
 	for(int i = 0; i< world->ennemies.nbr_ennemies; i++)
 	{
 		world->ennemies.sprite[i].image = charger_image_transparente("ennemy.bmp", renderer,r,g,b);
@@ -193,9 +194,8 @@ void refresh_graphic(jeu_t *jeu,world_t *world,SDL_Renderer * renderer,TTF_Font 
 			SDL_RenderCopy(renderer,msg->you_win.text,NULL,&(msg->you_win.DestR_text));
 		}		
 		SDL_RenderCopy(renderer,msg->score.text,NULL,&(msg->score.DestR_text));
-		update_message(&(msg->score_chiffre),renderer,font,world->score);
+		update_message(&(msg->score_chiffre),renderer,font,world->score,LARGEUR_ECRAN*5/8+LARGEUR_ECRAN/6,0,HAUTEUR_ECRAN/16);
 		SDL_RenderCopy(renderer,msg->score_chiffre.text,NULL,&(msg->score_chiffre.DestR_text));
-
 	}
 
 	SDL_RenderPresent(renderer);
@@ -219,6 +219,7 @@ void clear_textures(jeu_t *jeu,world_t *world)
 	SDL_DestroyTexture(world->tresor.image);
 	SDL_DestroyTexture(jeu->background.image);
 	SDL_DestroyTexture(jeu->image_start.image);
+	SDL_DestroyTexture(jeu->image_score.image);
 	SDL_DestroyTexture(jeu->image_quit.image);
 
 

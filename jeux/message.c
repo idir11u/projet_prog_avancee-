@@ -10,7 +10,7 @@
 #include"constante.h"
 #include"message.h"
 
-void init_message(message_t *msg,SDL_Renderer* renderer,TTF_Font *font)
+void init_message(message_t *msg,SDL_Renderer* renderer,TTF_Font *font,int *tab)
 {
 	init_text(&(msg->game_over),"Game over",renderer,font,LARGEUR_ECRAN/4,HAUTEUR_ECRAN/4+HAUTEUR_ECRAN/8,LARGEUR_ECRAN/2,HAUTEUR_ECRAN/4); //HAUTEUR_ECRAN*(3/8)
 	init_text(&(msg->you_win),"You Win",renderer,font,LARGEUR_ECRAN/4,HAUTEUR_ECRAN/4+HAUTEUR_ECRAN/8,LARGEUR_ECRAN/2,HAUTEUR_ECRAN/4);
@@ -18,25 +18,25 @@ void init_message(message_t *msg,SDL_Renderer* renderer,TTF_Font *font)
 	init_text(&(msg->score_chiffre),"0",renderer,font,LARGEUR_ECRAN*5/8+LARGEUR_ECRAN/6,0,LARGEUR_ECRAN/24,HAUTEUR_ECRAN/16);
 	init_text(&(msg->best_score[0]),"The Bests Scores : ",renderer,font,LARGEUR_ECRAN/4,HAUTEUR_ECRAN/4,LARGEUR_ECRAN/2,HAUTEUR_ECRAN/8); 
 	init_text(&(msg->best_score[1]),"1 st : ",renderer,font,(LARGEUR_ECRAN*5)/16,(HAUTEUR_ECRAN*7)/16,LARGEUR_ECRAN/8,HAUTEUR_ECRAN/8);
-	init_text(&(msg->best_score[4]),"0",renderer,font,(LARGEUR_ECRAN*5)/16+LARGEUR_ECRAN/8,(HAUTEUR_ECRAN*7)/16,LARGEUR_ECRAN/24,HAUTEUR_ECRAN/8); 
 	init_text(&(msg->best_score[2]),"2 nd : ",renderer,font,(LARGEUR_ECRAN*5)/16,(HAUTEUR_ECRAN*9)/16,LARGEUR_ECRAN/8,HAUTEUR_ECRAN/8);
-	init_text(&(msg->best_score[5]),"0",renderer,font,(LARGEUR_ECRAN*5)/16+LARGEUR_ECRAN/8,(HAUTEUR_ECRAN*9)/16,LARGEUR_ECRAN/24,HAUTEUR_ECRAN/8);
 	init_text(&(msg->best_score[3]),"3 th : ",renderer,font,(LARGEUR_ECRAN*5)/16,(HAUTEUR_ECRAN*11)/16,LARGEUR_ECRAN/8,HAUTEUR_ECRAN/8);
-	init_text(&(msg->best_score[6]),"0",renderer,font,(LARGEUR_ECRAN*5)/16+LARGEUR_ECRAN/8,(HAUTEUR_ECRAN*11)/16,LARGEUR_ECRAN/24,HAUTEUR_ECRAN/8);
+	update_message(&(msg->best_score[4]),renderer,font,tab[0],(LARGEUR_ECRAN*5)/16+LARGEUR_ECRAN/8,(HAUTEUR_ECRAN*7)/16,HAUTEUR_ECRAN/8);
+	update_message(&(msg->best_score[5]),renderer,font,tab[1],(LARGEUR_ECRAN*5)/16+LARGEUR_ECRAN/8,(HAUTEUR_ECRAN*9)/16,HAUTEUR_ECRAN/8);
+	update_message(&(msg->best_score[6]),renderer,font,tab[2],(LARGEUR_ECRAN*5)/16+LARGEUR_ECRAN/8,(HAUTEUR_ECRAN*11)/16,HAUTEUR_ECRAN/8);
 }
-
-void update_message(text_t *text ,SDL_Renderer* renderer,TTF_Font *font,int chiffre)
+///LARGEUR_ECRAN*5/8+LARGEUR_ECRAN/6,0,LARGEUR_ECRAN/24,HAUTEUR_ECRAN/16);
+void update_message(text_t *text ,SDL_Renderer* renderer,TTF_Font *font,int chiffre,int x,int y,int h)
 {	
 	char str [10];
 	sprintf(str,"%d",chiffre);
 	if (chiffre<= 9)
-		init_text(text,str,renderer,font,LARGEUR_ECRAN*5/8+LARGEUR_ECRAN/6,0,LARGEUR_ECRAN/24,HAUTEUR_ECRAN/16);
+		init_text(text,str,renderer,font,x,y,LARGEUR_ECRAN/24,h);
 	else if (chiffre <= 99)
-		init_text(text,str,renderer,font,LARGEUR_ECRAN*5/8+LARGEUR_ECRAN/6,0,LARGEUR_ECRAN/18,HAUTEUR_ECRAN/16);
+		init_text(text,str,renderer,font,x,y,LARGEUR_ECRAN/18,h);
 	else if (chiffre <= 999)
-		init_text(text,str,renderer,font,LARGEUR_ECRAN*5/8+LARGEUR_ECRAN/6,0,LARGEUR_ECRAN/12,HAUTEUR_ECRAN/16);
+		init_text(text,str,renderer,font,x,y,LARGEUR_ECRAN/12,h);
 	else 
-		init_text(text,str,renderer,font,LARGEUR_ECRAN*5/8+LARGEUR_ECRAN/6,0,LARGEUR_ECRAN/12,HAUTEUR_ECRAN/16);
+		init_text(text,str,renderer,font,x,y,LARGEUR_ECRAN/12,h);
 
 }
 

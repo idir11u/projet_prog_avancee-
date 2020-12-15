@@ -26,15 +26,17 @@ struct jeu_s
 	bool start;
 	bool score;
 	bool Quit;
-	//world_t world;
-	//message_t message;
 	image_t background;
 	image_t image_start;
 	image_t image_score;
-	image_t image_quit;
+	image_t image_quit;	
+	int *tab_score;
+
 };
 typedef struct jeu_s jeu_t;
 
 void init_jeux(jeu_t *jeu);
+void update_best_score(const char* nomFichier,int *tab ,int score);
+void clean_jeu(jeu_t *jeu);
 
 #endif 

@@ -12,6 +12,7 @@
 #include"message.h"
 #include"world.h"
 #include"jeu.h"
+#include"fonctions_fichiers.h"
 
 
 void init_XYWH(SDL_Rect *rect,int x,int y,int w,int h)
@@ -20,7 +21,6 @@ void init_XYWH(SDL_Rect *rect,int x,int y,int w,int h)
 	rect->y = y;
 	rect->w = w;
 	rect->h = h;
-
 }
 
 
@@ -41,6 +41,34 @@ void init_jeux(jeu_t *jeu)
 
 	init_XYWH(&(jeu->image_quit.SrcR_image),0,0,IMAGE_START_LARGEUR,IMAGE_START_HAUTEUR);
 	init_XYWH(&(jeu->image_quit.DestR_image),(3*LARGEUR_ECRAN)/8,(5*HAUTEUR_ECRAN)/8,LARGEUR_ECRAN/4,HAUTEUR_ECRAN/8);
-
+	
+	jeu->tab_score	= malloc(3*sizeof(int));
+	lire_best_score("score.txt",jeu->tab_score); 
 }
 
+void update_best_score(const char* nomFichier,int *tab ,int score)
+{
+	int tmp;
+	if(score > tab[0])
+	{
+		tmp = tab[0];
+		tab[0] = score;
+		tab[2] = tab[1];
+		tab[1] = tmp;
+	}
+	else if(score >tab[1])
+	{
+		tab[2] = tab[1];
+		tab[1] = score;
+	}
+	else if(score >tab[2])
+	{
+		tab[2] = score;
+	}
+	ecrire_best_score(nomFichier,tab);
+}
+
+void clean_jeu(jeu_t *jeu)
+{
+	free(jeu->tab_score);
+}

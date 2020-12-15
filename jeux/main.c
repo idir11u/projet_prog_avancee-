@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include "fonctions_SDL.h"
 #include "fonctions_fichiers.h"
-#include  "constante.h"
+#include "constante.h"
 #include <stdbool.h>
 #include "world.h"
 #include "graphic.h"
@@ -29,11 +29,12 @@ int main(int argc, char *argv[]){
 	TTF_Font *font = TTF_OpenFont("./arial.ttf",35);
 	message_t msg;
 	init_jeux(&jeu);
-	init_message(&msg,ecran,font);
+	init_message(&msg,ecran,font,jeu.tab_score);
 	//Charger l’image
 	init_textures(&jeu,&world,ecran);
 	printf("nbr ennemy %i\n",world.ennemies.nbr_ennemies);
 	printf("ligne   %i colonne %i \n",world.ligne , world.colonne);
+    printf("hello %i %i %i\n",jeu.tab_score[0],jeu.tab_score[1],jeu.tab_score[2]);
 
 	while(!world.terminer)
 	{
@@ -43,9 +44,11 @@ int main(int argc, char *argv[]){
 		refresh_graphic(&jeu,&world,ecran,font,&msg);
 		pause(15);// une pause du programe pendant 10 ms  
 	}
+	update_best_score("score.txt",jeu.tab_score,world.score);
 	clean_world(&world);
 	clear_textures(&jeu,&world);
 	clean_message(&msg);
+	//clean_jeu(&jeu);
 	// Fermer la police et quitter SDL_ttf
 	TTF_CloseFont( font );
 	TTF_Quit();

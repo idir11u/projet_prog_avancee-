@@ -24,8 +24,8 @@ struct message_s
 };
 typedef struct message_s message_t;	
 
-void init_message(message_t *msg,SDL_Renderer* renderer,TTF_Font *font);
-void update_message(text_t *text ,SDL_Renderer* renderer,TTF_Font *font,int chiffre);
+void init_message(message_t *msg,SDL_Renderer* renderer,TTF_Font *font,int *best_score);
+void update_message(text_t *text ,SDL_Renderer* renderer,TTF_Font *font,int chiffre,int x,int y, int h);
 void clean_message(message_t *msg);
 
 #endif 
