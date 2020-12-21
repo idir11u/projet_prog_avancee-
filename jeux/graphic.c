@@ -118,8 +118,31 @@ void update_data(world_t *world)
 
 
 
+void clear_textures(jeu_t *jeu,world_t *world)
+{
+	SDL_DestroyTexture(world->terrain.image);
+	SDL_DestroyTexture(world->heros.image);
+	for(int i = 0; i< world->ennemies.nbr_ennemies; i++)
+	{
+		SDL_DestroyTexture(world->ennemies.sprite[i].image);
+	}
+	for(int i = 0; i< world->monnaie.nbr_pieces; i++)
+	{
+		SDL_DestroyTexture(world->monnaie.pieces[i].image);
+	}
+	SDL_DestroyTexture(world->tresor.image);
+	SDL_DestroyTexture(jeu->background.image);
+	SDL_DestroyTexture(jeu->image_start.image);
+	SDL_DestroyTexture(jeu->image_score.image);
+	SDL_DestroyTexture(jeu->image_quit.image);
+
+
+}
+
+
 void refresh_graphic(jeu_t *jeu,world_t *world,SDL_Renderer * renderer,TTF_Font *font,message_t *msg)
 {
+	int niv;
 	SDL_RenderClear(renderer);
 	if(!jeu->start )
 	{
@@ -191,37 +214,46 @@ void refresh_graphic(jeu_t *jeu,world_t *world,SDL_Renderer * renderer,TTF_Font 
 		}
 		if(world->tresor.farme.stop)
 		{	
-			SDL_RenderCopy(renderer,msg->you_win.text,NULL,&(msg->you_win.DestR_text));
-		}		
+			if(world->niveau==NBR_NIVEAU)		
+				SDL_RenderCopy(renderer,msg->game_finished.text,NULL,&(msg->game_finished.DestR_text));
+			else
+				SDL_RenderCopy(renderer,msg->you_win.text,NULL,&(msg->you_win.DestR_text));
+		}
 		SDL_RenderCopy(renderer,msg->score.text,NULL,&(msg->score.DestR_text));
 		update_message(&(msg->score_chiffre),renderer,font,world->score,LARGEUR_ECRAN*5/8+LARGEUR_ECRAN/6,0,HAUTEUR_ECRAN/16);
-		SDL_RenderCopy(renderer,msg->score_chiffre.text,NULL,&(msg->score_chiffre.DestR_text));
+		SDL_RenderCopy(renderer,msg->score_chiffre.text,NULL,&(msg->score_chiffre.DestR_text));	
+		if(!msg->est_affiche_niveau)
+		{
+			SDL_RenderCopy(renderer,msg->niveau[0].text,NULL,&(msg->niveau[0].DestR_text));
+			SDL_RenderCopy(renderer,msg->niveau[1].text,NULL,&(msg->niveau[1].DestR_text));
+		}
 	}
-
 	SDL_RenderPresent(renderer);
+	
+	if(!msg->est_affiche_niveau && jeu->start ) 
+	{		
+		SDL_Delay(1000);
+		msg->est_affiche_niveau = true;
+	}
+	if(world->tresor.farme.stop)
+	{	         	
+		SDL_Delay(1000);
+		niv = world->niveau;
+		if(world->niveau<NBR_NIVEAU)
+		{	
+			world->niveau++;
+			int temp = world->score;
+			clean_world(world);
+			clear_textures(jeu,world);
+			clean_message(msg);
+			init_world(world,world->niveau,world->score);	
+			init_textures(jeu,world,renderer);
+			init_message(msg,renderer,font,jeu->tab_score,world->niveau);
+		}
+	}
+
 }
 
 
 
-
-void clear_textures(jeu_t *jeu,world_t *world)
-{
-	SDL_DestroyTexture(world->terrain.image);
-	SDL_DestroyTexture(world->heros.image);
-	for(int i = 0; i< world->ennemies.nbr_ennemies; i++)
-	{
-		SDL_DestroyTexture(world->ennemies.sprite[i].image);
-	}
-	for(int i = 0; i< world->monnaie.nbr_pieces; i++)
-	{
-		SDL_DestroyTexture(world->monnaie.pieces[i].image);
-	}
-	SDL_DestroyTexture(world->tresor.image);
-	SDL_DestroyTexture(jeu->background.image);
-	SDL_DestroyTexture(jeu->image_start.image);
-	SDL_DestroyTexture(jeu->image_score.image);
-	SDL_DestroyTexture(jeu->image_quit.image);
-
-
-}
 
