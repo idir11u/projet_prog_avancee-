@@ -31,7 +31,6 @@ struct jeu_s
 	image_t image_score;
 	image_t image_quit;	
 	int *tab_score;
-
 };
 typedef struct jeu_s jeu_t;
 

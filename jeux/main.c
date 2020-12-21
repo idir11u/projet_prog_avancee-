@@ -22,14 +22,14 @@ int main(int argc, char *argv[]){
 	jeu_t jeu;
 	world_t world;
 	init_SDL();
-	init_world(&world);
+	init_world(&world,1,0);
 	fenetre = creer_window(HAUTEUR_ECRAN,LARGEUR_ECRAN);
 	ecran = SDL_CreateRenderer(fenetre, -1, SDL_RENDERER_ACCELERATED);
 	TTF_Init();
 	TTF_Font *font = TTF_OpenFont("./arial.ttf",35);
 	message_t msg;
 	init_jeux(&jeu);
-	init_message(&msg,ecran,font,jeu.tab_score);
+	init_message(&msg,ecran,font,jeu.tab_score,world.niveau);
 	//Charger l’image
 	init_textures(&jeu,&world,ecran);
 	printf("nbr ennemy %i\n",world.ennemies.nbr_ennemies);

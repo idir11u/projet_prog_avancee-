@@ -47,14 +47,15 @@ struct world_s
 	terrain_t terrain;
 	char ** tab; //la matrice de du jeux 
 	sprite_t heros;
-	int score; //le score de la partie 	
+	int score; //le score de la partie
+	int niveau;	
 };
 
 typedef struct world_s world_t;
 
 void init_sprite(sprite_t * sprite  , int h_terrain ,int w_terrain,int x,int y,int large_img,int haut_img,int nbr_img_horis,int nbr_img_vetic);
 void init_ennemies(world_t *world);
-void init_world(world_t *world);
+void init_world(world_t *world, int niveau,int score);
 void depacemnt_bordure(sprite_t* sprite,int Hauteur_ecran,int Largeur_ecran);
 bool collision_murs(sprite_t sprite, terrain_t terrain, int ligne, int colonne);
 bool collision(sprite_t* sprite_1,sprite_t* sprite_2); // pour la collision entre deux sprites 

@@ -6,7 +6,7 @@
 #include"world.h"
 #include"constante.h"
 #include"gestion_farmes.h"
-
+#include<string.h>
 
 
 void init_sprite(sprite_t * sprite,int h_terrain,int w_terrain,int x,int y,int large_img,int haut_img,int nbr_img_horis,int nbr_img_vetic)
@@ -46,6 +46,7 @@ void init_pieces_money(world_t *world)
 
 void init_ennemies(world_t *world)
 {
+	
 	world->ennemies.nbr_ennemies = (world->terrain.chemin.nbr_sommet-2)/6;
 	if (world->ennemies.nbr_ennemies == 1 || world->ennemies.nbr_ennemies == 0){
 		world->ennemies.sprite = malloc(world->ennemies.nbr_ennemies*sizeof(sprite_t));
@@ -64,7 +65,7 @@ void init_ennemies(world_t *world)
 		world->ennemies.indice_chemin_actuel = malloc(world->ennemies.nbr_ennemies*sizeof(int));
 		
 		for (int i = 0 ; i<world->ennemies.nbr_ennemies;i++){
-			world->ennemies.indice_chemin_actuel[i] = 6*(i+1); // pour l'ennemmy  ;
+			world->ennemies.indice_chemin_actuel[i] = 6*(i+1); //pour l'ennemmy  ;
 			world->ennemies.aller_retour[i] = 0;
 			int y = world->terrain.DestR_terrain[0][0].h*(world->terrain.chemin.tab[world->ennemies.indice_chemin_actuel[i]]/world->colonne);//world->terrain.DestR_terrain[0][0].w * (world->terrain.chemin.tab[world->terrain.chemin.nbr_sommet/2]/world->colonne);
 			int x = world->terrain.DestR_terrain[0][0].w*(world->terrain.chemin.tab[world->ennemies.indice_chemin_actuel[i]]%world->colonne);//world->terrain.DestR_terrain[0][0].h * (world->terrain.chemin.tab[world->terrain.chemin.nbr_sommet/2]%world->colonne);
@@ -73,12 +74,22 @@ void init_ennemies(world_t *world)
 	}
 } 
 
-void init_world(world_t *world)
+void init_world(world_t *world, int niveau,int score )
 {
-	world->terminer = false ;
-	world->score = 0; 
-	taille_fichier("terrain.txt",&(world->ligne),&(world->colonne));
-	world->tab = lire_fichier("terrain.txt");
+	char *niveau1;
+	if(niveau == 1) 
+		niveau1 = "terrain1.txt";
+	else if (niveau == 2)
+		niveau1 = "terrain2.txt";
+	else if (niveau == 3)
+		niveau1 = "terrain3.txt";
+	else if (niveau == 4)
+		niveau1 = "terrain4.txt";
+	world->niveau = niveau;
+	world->terminer = false;
+	world->score = score;
+	taille_fichier(niveau1,&(world->ligne),&(world->colonne));
+	world->tab = lire_fichier(niveau1);
 	init_terrain(&(world->terrain),world->ligne,world->colonne,world->tab);
 	init_sprite(&(world->heros),world->terrain.DestR_terrain[0][0].h,world->terrain.DestR_terrain[0][0].w,0,0,LARGEUR_IMAGE_HEROS, HAUTEUR_IMAGE_HEROS,NBR_HORIS_IMAGE_HEROS , NBR_VERTIC_IMAGE_HEROS);
 	init_terrain_avec_chemin(&(world->terrain),world->ligne,world->colonne ,world->tab,world->heros.DestR_sprite.x ,world->heros.DestR_sprite.y);

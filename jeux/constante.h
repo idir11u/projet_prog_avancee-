@@ -145,5 +145,11 @@
 
 #define  IMAGE_START_LARGEUR 195
 
+/**
+ * \ brief nombre de niveau
+ */
+
+#define  NBR_NIVEAU 4
+
 
 #endif 

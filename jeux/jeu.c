@@ -29,7 +29,6 @@ void init_jeux(jeu_t *jeu)
 	jeu->start = false;
 	jeu->Quit = false;
 	jeu->score = false;
-
 	init_XYWH(&(jeu->background.SrcR_image),0,0,BACKGROUND_LARGEUR,BACKGROUND_HAUTEUR);
 	init_XYWH(&(jeu->background.DestR_image),0,0,LARGEUR_ECRAN,HAUTEUR_ECRAN);
 
@@ -41,7 +40,7 @@ void init_jeux(jeu_t *jeu)
 
 	init_XYWH(&(jeu->image_quit.SrcR_image),0,0,IMAGE_START_LARGEUR,IMAGE_START_HAUTEUR);
 	init_XYWH(&(jeu->image_quit.DestR_image),(3*LARGEUR_ECRAN)/8,(5*HAUTEUR_ECRAN)/8,LARGEUR_ECRAN/4,HAUTEUR_ECRAN/8);
-	
+
 	jeu->tab_score	= malloc(3*sizeof(int));
 	lire_best_score("score.txt",jeu->tab_score); 
 }
