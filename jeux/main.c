@@ -38,7 +38,7 @@ int main(int argc, char *argv[]){
 
 	while(!world.terminer)
 	{
-		handle_events(&jeu,&world,&evenements);
+		handle_events(&jeu,&world,&evenements,ecran,font,&msg);
 		update_world(&world);
 		//world.ennemy.DestR_sprite.x++;
 		refresh_graphic(&jeu,&world,ecran,font,&msg);

@@ -40,7 +40,11 @@ void init_jeux(jeu_t *jeu)
 
 	init_XYWH(&(jeu->image_quit.SrcR_image),0,0,IMAGE_START_LARGEUR,IMAGE_START_HAUTEUR);
 	init_XYWH(&(jeu->image_quit.DestR_image),(3*LARGEUR_ECRAN)/8,(5*HAUTEUR_ECRAN)/8,LARGEUR_ECRAN/4,HAUTEUR_ECRAN/8);
-
+	
+	init_XYWH(&(jeu->home.SrcR_image),0,0,HOME_LARGEUR,HOME_HAUTEUR);
+	
+	init_XYWH(&(jeu->replay.SrcR_image),0,0,REPLAY_LARGEUR,REPLAY_HAUTEUR);
+	init_XYWH(&(jeu->replay.DestR_image),(LARGEUR_ECRAN*16)/17-LARGEUR_ECRAN/64,(HAUTEUR_ECRAN)/10 ,LARGEUR_ECRAN/16,HAUTEUR_ECRAN/16);
 	jeu->tab_score	= malloc(3*sizeof(int));
 	lire_best_score("score.txt",jeu->tab_score); 
 }

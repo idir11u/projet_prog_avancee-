@@ -31,9 +31,12 @@ struct jeu_s
 	image_t image_score;
 	image_t image_quit;	
 	int *tab_score;
+	image_t home;
+	image_t replay;
 };
 typedef struct jeu_s jeu_t;
 
+void init_XYWH(SDL_Rect *rect,int x,int y,int w,int h);
 void init_jeux(jeu_t *jeu);
 void update_best_score(const char* nomFichier,int *tab ,int score);
 void clean_jeu(jeu_t *jeu);

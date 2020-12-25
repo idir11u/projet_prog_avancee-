@@ -39,16 +39,20 @@ typedef struct ennemy_s ennemy_t;
 
 struct world_s 	
 {	
-	int ligne,colonne;//nombre de ligne et de colonne de la matrice q'on va lire depuis de fichier .txt du terrain
+	//int ligne,colonne;//nombre de ligne et de colonne de la matrice q'on va lire depuis de fichier .txt du terrain
+	int colonne;
+	int ligne;//nombre de ligne et de colonne de la matrice q'on va lire depuis de fichier .txt du terrain
 	ennemy_t ennemies;
 	money_t monnaie;
 	sprite_t tresor; 
 	bool terminer;
 	terrain_t terrain;
 	char ** tab; //la matrice de du jeux 
-	sprite_t heros;
-	int score; //le score de la partie
-	int niveau;	
+	sprite_t heros;	
+	int score; //le score de la partie	
+	int niveau;		
+
+	///int niveau;		
 };
 
 typedef struct world_s world_t;

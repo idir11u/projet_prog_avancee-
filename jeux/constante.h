@@ -145,6 +145,31 @@
 
 #define  IMAGE_START_LARGEUR 195
 
+
+
+/**
+ * \ brief hauteur de l'image  image_start
+ */
+#define HOME_HAUTEUR  617
+
+/**
+ * \ brief largeur de l'image image_start
+ */
+
+#define  HOME_LARGEUR 664
+
+/**
+ * \ brief hauteur de l'image  image_start
+ */
+#define REPLAY_HAUTEUR  616
+
+/**
+ * \ brief largeur de l'image image_start
+ */
+
+#define  REPLAY_LARGEUR 665
+
+
 /**
  * \ brief nombre de niveau
  */
