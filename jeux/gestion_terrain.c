@@ -78,7 +78,7 @@ void init_terrain(terrain_t* t,int ligne,int colonne,char ** tab )
 	{
 		for(int j=0; j<colonne; j++)
 		{
-			if (tab[i][j]== '0'  || tab[i][j] == 'p' || tab[i][j] == ' ')
+			if (tab[i][j]== '0'  || tab[i][j] == 'p' || tab[i][j] == ' ' || tab[i][j] == 'd')
 				t->SrcR_terrain[i][j].x = 32*0;
 			else if (tab[i][j]== '1')
 				t->SrcR_terrain[i][j].x = 32*1;
