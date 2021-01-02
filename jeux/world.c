@@ -7,6 +7,7 @@
 #include"constante.h"
 #include"gestion_farmes.h"
 #include<string.h>
+#include"sound.h"
 
 
 void init_sprite(sprite_t * sprite,int h_terrain,int w_terrain,int x,int y,int large_img,int haut_img,int nbr_img_horis,int nbr_img_vetic)
@@ -271,7 +272,7 @@ void demarche_ennemies(world_t *world)
 	}
 }
 
-void update_world(world_t *world)
+void update_world(world_t *world,bruitages_t* bruits)
 {
 	depacemnt_bordure(&(world->heros),world->colonne*40,world->ligne*40);
 	if(!collision(&(world->heros),&(world->tresor)) && world->heros.est_visible == 1){
@@ -280,6 +281,7 @@ void update_world(world_t *world)
 			{
 				invisible(&(world->heros));
 				invisible (&(world->ennemies.sprite[i]));
+				//play_son(bruits->gameover);	
 			}
 		}
 		demarche_ennemies(world);
@@ -288,7 +290,8 @@ void update_world(world_t *world)
 			if (collision(&(world->heros),&(world->monnaie.pieces[i])) && world->heros.est_visible == 1  && 1 == world->monnaie.pieces[i].est_visible)
 			{
 				invisible (&(world->monnaie.pieces[i]));
-				world->score = world->score + VALEUR_PIECE_MONEY ;			
+				world->score = world->score + VALEUR_PIECE_MONEY ;
+				//play_son(bruits->money);	
 			}
 		}
 
