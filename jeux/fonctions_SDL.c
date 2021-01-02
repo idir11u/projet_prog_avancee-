@@ -19,14 +19,6 @@ void init_SDL()
 	}
 }
 
-void init_mixer()
-{
-	if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) <0)
-		{
-			printf("Erreur Initialisation Mixer : %s", Mix_GetError());
-			return;	
-		}
-}
 
 
 SDL_Window* creer_window(int hauteur,int largeur){
@@ -42,8 +34,15 @@ SDL_Window* creer_window(int hauteur,int largeur){
 }
 
 
-
-
+void init_mixer()
+{
+	TTF_Init();
+	if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) <0)
+		{
+			printf("Erreur Initialisation Mixer : %s", Mix_GetError());
+			return;	
+		}
+}
 
 /**
      * Chargement d'une image sur un rendu
