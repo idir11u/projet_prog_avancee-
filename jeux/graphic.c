@@ -2,11 +2,12 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "fonctions_SDL.h"
-#include"world.h"
-#include"constante.h"
-#include<SDL2/SDL.h>
+#include "world.h"
+#include "constante.h"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 #include "message.h"
-#include"jeu.h"
+#include "jeu.h"
 #include "sound.h"
 
 void init_textures(jeu_t *jeu,world_t *world,SDL_Renderer * renderer)
@@ -55,7 +56,7 @@ void clear_textures(jeu_t *jeu,world_t *world)
 
 }
 
-void handle_events(jeu_t *jeu,world_t *world ,SDL_Event *evenements, SDL_Renderer * renderer,TTF_Font *font,message_t *msg,bruitages_t *bruits)
+void handle_events(jeu_t *jeu,world_t *world ,SDL_Event *evenements, SDL_Renderer * renderer,TTF_Font *font,message_t *msg,bruitages_t* bruits)
 {
 	while( SDL_PollEvent( evenements ) )
 			switch(evenements->type)
@@ -115,24 +116,23 @@ void handle_events(jeu_t *jeu,world_t *world ,SDL_Event *evenements, SDL_Rendere
                 		if(evenements->button.x> jeu->image_start.DestR_image.x && evenements->button.x<jeu->image_start.DestR_image.x+jeu->image_start.DestR_image.w )
 							if(evenements->button.y> jeu->image_start.DestR_image.y && evenements->button.y < jeu->image_start.DestR_image.y+jeu->image_start.DestR_image.h)
                     		{
-                    			jeu->start = true;
-								//play_son(bruits->clic);
+                    			jeu->start = true;									
+                    			Mix_PlayChannel(0,bruits->clic,0);
                 			}
                     	if(evenements->button.x> jeu->image_quit.DestR_image.x && evenements->button.x<jeu->image_quit.DestR_image.x+jeu->image_quit.DestR_image.w )
 							if(evenements->button.y> jeu->image_quit.DestR_image.y && evenements->button.y < jeu->image_quit.DestR_image.y+jeu->image_quit.DestR_image.h)
                     		{
-								if(!jeu->start && !jeu->score)
-								{
-									world->terminer = true;								
-									//play_son(bruits->clic);
+								if(!jeu->start && !jeu->score){
+									world->terminer = true;
+									Mix_PlayChannel(0,bruits->clic,0);
 								}
-							}
+                			}
 						if(evenements->button.x> jeu->image_score.DestR_image.x && evenements->button.x<jeu->image_score.DestR_image.x+jeu->image_score.DestR_image.w )
 							if(evenements->button.y> jeu->image_score.DestR_image.y && evenements->button.y < jeu->image_score.DestR_image.y+jeu->image_score.DestR_image.h)
                     		{
 								if(!jeu->Quit && !jeu->start){
                     				jeu->score = true;
-									//play_son(bruits->clic);
+									Mix_PlayChannel(0,bruits->clic,0);
 								}
                 			}
 						if(evenements->button.x> jeu->home.DestR_image.x && evenements->button.x<jeu->home.DestR_image.x+jeu->home.DestR_image.w )
@@ -142,7 +142,6 @@ void handle_events(jeu_t *jeu,world_t *world ,SDL_Event *evenements, SDL_Rendere
 								{
 									jeu->start = false;
 									jeu->score = false;
-									//play_son(bruits->clic);
 								}
 								if (!jeu->Quit && !jeu->score) 
 								{
@@ -154,7 +153,7 @@ void handle_events(jeu_t *jeu,world_t *world ,SDL_Event *evenements, SDL_Rendere
 									init_world(world,world->niveau,0);	
 									init_textures(jeu,world,renderer);
 									init_message(msg,renderer,font,jeu->tab_score,1);
-									//play_son(bruits->clic);
+									Mix_PlayChannel(0,bruits->clic,0);
 								}
                 			}
 						if(evenements->button.x> jeu->replay.DestR_image.x && evenements->button.x<jeu->replay.DestR_image.x+jeu->replay.DestR_image.w )
@@ -165,11 +164,12 @@ void handle_events(jeu_t *jeu,world_t *world ,SDL_Event *evenements, SDL_Rendere
 									clean_world(world);
 									clear_textures(jeu,world);
 									clean_message(msg);
-									init_world(world,world->niveau,0);	
+									init_world(world,1,0);
 									init_textures(jeu,world,renderer);
 									init_message(msg,renderer,font,jeu->tab_score,1);
-									//play_son(bruits->clic);
+									Mix_PlayChannel(0,bruits->clic,0);
 								}
+
                 			}
 						
                     }
@@ -186,7 +186,7 @@ void update_data(world_t *world)
 
 
 
-void refresh_graphic(jeu_t *jeu,world_t *world,SDL_Renderer * renderer,TTF_Font *font,message_t *msg,bruitages_t *bruits)
+void refresh_graphic(jeu_t *jeu,world_t *world,SDL_Renderer * renderer,TTF_Font *font,message_t *msg,bruitages_t* bruits)
 {
 	SDL_RenderClear(renderer);
 	if(!jeu->start )
@@ -248,14 +248,15 @@ void refresh_graphic(jeu_t *jeu,world_t *world,SDL_Renderer * renderer,TTF_Font 
 		else if(collision(&(world->heros),&(world->tresor)))
 		{
 			if (world->tresor.farme.cpt<3)
-			{
+			{			
 				if(world->tresor.farme.cpt  <2 )
 				{
-					world->score = world->score + VALEUR_PIECE_MONEY ;			
+					world->score = world->score + VALEUR_PIECE_MONEY ;
 				}
 				if(world->tresor.farme.cpt == 2)
 				{
 					world->tresor.farme.stop = true;
+					Mix_PlayChannel(0,bruits->tresor,0);
 				}
 				update_farmes(&(world->tresor.farme),NBR_HORIS_IMAGE_TRESOR,0,15);// *
 				world->tresor.SrcR_sprite.x = (LARGEUR_IMAGE_TRESOR/NBR_HORIS_IMAGE_TRESOR)*world->tresor.farme.cpt;
@@ -269,7 +270,6 @@ void refresh_graphic(jeu_t *jeu,world_t *world,SDL_Renderer * renderer,TTF_Font 
 				SDL_RenderCopy(renderer,msg->game_finished.text,NULL,&(msg->game_finished.DestR_text));
 			else
 				SDL_RenderCopy(renderer,msg->you_win.text,NULL,&(msg->you_win.DestR_text));
-			////play_son(bruits->tresor);
 		}
 		SDL_RenderCopy(renderer,msg->score.text,NULL,&(msg->score.DestR_text));
 		update_message(&(msg->score_chiffre),renderer,font,world->score,LARGEUR_ECRAN*5/8+LARGEUR_ECRAN/6,0,HAUTEUR_ECRAN/16);
@@ -284,12 +284,12 @@ void refresh_graphic(jeu_t *jeu,world_t *world,SDL_Renderer * renderer,TTF_Font 
 	
 	if(!msg->est_affiche_niveau && jeu->start ) 
 	{		
-		SDL_Delay(1000);
+		SDL_Delay(2000);
 		msg->est_affiche_niveau = true;
 	}
 	if(world->tresor.farme.stop)
 	{	         	
-		SDL_Delay(1000);
+		SDL_Delay(2000);
 		if(world->niveau<NBR_NIVEAU)
 		{	
 			world->niveau++;
