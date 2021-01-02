@@ -1,233 +1,112 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-
-#include"fonctions_fichiers.h"
-
 /**
-*Allocation d'un tableau à 2 dimensions ch caractères
-*@param n nombre de lignes 
-*@param m nombre de colonnes
-*@return tableau de Pointeurs (tableau à 2 dimensions)
+* \file  fonctios_SDL.c
+* \author  Ait Aider Zinedine && Idir Walid Hakim
+* \Brief bibliotheque d'fonctios_SDL . 
 */
-char** allouer_tab_2D(int n, int m)
+#include<stdio.h>
+#include<stdlib.h>
+#include<SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
+#include"fonctions_SDL.h"
+
+void init_SDL()
 {
-	char** tab = malloc(n*sizeof(char*));
-	for(int i = 0 ; i<n ; i++)
+	if(SDL_Init(SDL_INIT_VIDEO) < 0) // Initialisation de la SDL
 	{
-		tab[i] = malloc(m*sizeof(char));
+		printf("Erreur d’initialisation de la SDL: %s",SDL_GetError());
+		SDL_Quit();
+		return;
 	}
-	return tab ;
 }
 
 
 
-/**
-*Libération de la mémoire alouée à la création du tableau de pointeurs
-*@param tab le tableau à désallouer
-*@param n nombre de lignes du tableau 
-*/
-void desallouer_tab_2D(char** tab, int n)
-{
-	for (int i=0 ; i<n ; i++)
-	{
-		free(tab[i]);
-	}
-	free(tab); 
+SDL_Window* creer_window(int hauteur,int largeur){
 
+	SDL_Window *fenetre = SDL_CreateWindow("Fenetre SDL", SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,hauteur,largeur,SDL_WINDOW_RESIZABLE);
+	if(fenetre == NULL) // En cas d’erreur
+	{
+		printf("Erreur de la creation d’une fenetre: %s",SDL_GetError());
+		SDL_Quit();
+		return NULL;
+	}
+	return fenetre;
 }
 
 
-
-/**
-*Affichage d'un tableau à 2 dimensions de caractères
-*@param tab le tableau à afficher
-*@param n le nombre de lignes du tableau
-*@param m le nombre de colonnes du tableau
-*/
-void afficher_tab_2D(char** tab, int n, int m)
+void init_mixer()
 {
-	for (int i = 0; i<n; i++)      
-	{
-		for (int j = 0; j<m ;j++)
-			{
-			printf("%c ",tab[i][j]);
+	TTF_Init();
+	if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) <0)
+		{
+			printf("Erreur Initialisation Mixer : %s", Mix_GetError());
+			return;	
 		}
-		printf("\n");
-	}
 }
-
 
 /**
-*Calcul de la taille(nombre de lignes et de colonnes) maximale d'un fichier 
-*@param nomFichier le fichier 
-*@param nbLig	adresse dans laquelle stocker le nombre max de lignes du fichier 
-*@param nbCol   adresse dans laquelle stocker le nombre max de colonnes du fichier
-*/
-void taille_fichier(const char* nomFichier, int* nbLig, int* nbCol)
+     * Chargement d'une image sur un rendu
+     * @param nomFichier le nom de l'image au format Bitmap à charger 
+     * @param renderer le rendu 
+     * @return une texture contenant l'image chargée
+     */
+
+SDL_Texture* charger_image (const char* nomfichier, SDL_Renderer*renderer)
 {
-	FILE* fichier = fopen(nomFichier,"r");
-	int cpt_colonne=0;
-	int cpt_ligne = 0; 
-	char char_actuel,char_precedant;
 
-	if (fichier != NULL)
-    {
-        do
-        {
-            char_actuel= fgetc(fichier);
-            if (char_actuel == EOF)
-            {
-				if (*nbCol<cpt_colonne)
-            		*nbCol = cpt_colonne;
-				cpt_colonne = 0;
-				if (char_precedant == '\n')
-					cpt_ligne = cpt_ligne -1;
-            	cpt_ligne++;
-            }
-
-            else if(char_actuel == '\n'){  
-            	if (*nbCol<cpt_colonne)
-            		*nbCol = cpt_colonne;
-				cpt_colonne = 0;
-				cpt_ligne++;           	}
-           	else
-           	{
-           		cpt_colonne++;
-           	}
-           	char_precedant = char_actuel;
-        }while (char_actuel != EOF);
-        *nbLig= cpt_ligne;
-        fclose(fichier);
-
-    }
+	SDL_Surface *image =  SDL_LoadBMP(nomfichier);
+	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer ,image);
+	SDL_FreeSurface(image);
+	if (texture != NULL) //si l'image est bien charger  elle renvoie la texture associé a l'image 
+		return texture ;
+	printf("l'image n'a pas été chargée ");
+	return NULL ;
 }
-
-
-
 /**
-*Lecture d'un fichier et sa copie dans un tableau à 2 dimension 
-*@param nomFichier le tableau à lire
-*@return le tableau contenant tous les carabtères du fichier
-*/
+	*Chargement d'une image transparente 
+	*@param nomfichier le nom de l'image au format Bitmap à charger 
+	*@param renderer le rendu
+	*@param r le taux de rouge de la couleur à masquer
+	*@param g le taux de vert de la couleur à masquer
+	*@param b le taux de bleue de la couleur à masquer
+	*@return l'image privée de la couleur souhaitée
+	*/
 
-char** lire_fichier(const char* nomFichier)
+SDL_Texture* charger_image_transparente(const char* nomfichier,SDL_Renderer* renderer,Uint8 r, Uint8 g, Uint8 b)
 {
-	FILE* fichier =  fopen(nomFichier,"r");
-	int nbr_ligne ;
-	int nbr_colonne ;
-	char  c ;
-
-	taille_fichier(nomFichier,&nbr_ligne,&nbr_colonne);
-	char** tab = allouer_tab_2D(nbr_ligne,nbr_colonne);
-    for(int i = 0 ; i<nbr_ligne;i++)
-    {
-    	for (int j = 0; j < nbr_colonne; j++)
-    	{
-    			tab[i][j] = ' '; 
-    	}
-    }
-    int i=0,j=0;
-
-    if (fichier != 0){
-    	while(c!=EOF){       		
-        	c = fgetc(fichier);
-	  	if (c == '\n' || c==EOF){
-        		j=0;
-        		i++;
-        	}
-        	else{
-        		tab[i][j] = c;
-        		j++;
-
-        	}
-       	}
- 	}
-	fclose(fichier);
-	return tab;
+	SDL_Surface *image = NULL;
+	SDL_Texture *texture = NULL;
+	image = SDL_LoadBMP(nomfichier);
+	SDL_SetColorKey(image, SDL_TRUE, SDL_MapRGB(image->format,r,g,b));
+	texture = SDL_CreateTextureFromSurface(renderer ,image); 
+	SDL_FreeSurface(image);
+	return texture ;
 }
-
-void lire_best_score(const char* nomFichier,int *tab)
-{
-	FILE* fichier =  fopen(nomFichier,"a+");
-	char c = fgetc(fichier);
-	fclose(fichier);
-
-	if (c!= EOF)
-	{
-		fichier =  fopen(nomFichier,"r");
-		fscanf(fichier, "les meilleurs scores sont %i %i %i\n",&tab[0],&tab[1],&tab[2]);
-		fclose(fichier);
-	}
-	else
-	{ 
-		fichier =  fopen(nomFichier,"w+");
-		tab[0]= 0; 
-		tab[1]= 0;
-		tab[2]= 0;
-		fprintf(fichier,"les meilleurs scores sont %i %i %i\n",tab[0],tab[1],tab[2]);
-		fclose(fichier);
-	}
-
+/**
+	*Affichage de texte sur le rendu 
+	*@param message le message à afficher
+	*@param renderer le rendu
+	*@param font la police de charactère 
+	*@param color couleur de la police
+	*@return l'image privée de la couleur souhaitée
+	*/
 	
+SDL_Texture* charger_texte(const char* message, SDL_Renderer* renderer,TTF_Font *font, SDL_Color color) 
+{
+	SDL_Texture *texture = NULL;
+	SDL_Surface *texte;
+	texte = TTF_RenderText_Solid(font,message,color);
+	texture = SDL_CreateTextureFromSurface(renderer ,texte);
+	SDL_FreeSurface(texte);
+	return texture;
 }
 
-void ecrire_best_score(const char* nomFichier,int *tab)
-{
-	FILE* fichier =  fopen(nomFichier,"w+");
-	if (fichier != 0)
-	{
-		fprintf(fichier, "les meilleurs scores sont %i %i %i\n",tab[0],tab[1],tab[2]);
-   	}
-	fclose(fichier);
-}
 
 /**
-*Modifier un caractère présent dans un tableau par un autre 
-*@param tab le tableau de caractère à modifier 
-*@param	n nombre de lignes du tableau
-*@param m nombre de colonnes du tableau 
-*@param ancien le caractère à remplacer
-*@param nouveau le nouveau caractère
-*@return un nouveau tableau sur lequel on a replacé les caractères souhaités 
+ * \brief La fonction met le programme en pause pendant un laps de temps
+ * \param time ce laps de temps en milliseconde
 */
 
-char** modifier_caractere(char** tab, int n, int m, char ancien, char nouveau)
-{
-	char ** nv = allouer_tab_2D(n,m);
-	for(int i=0;i<n;i++)
-	{
-		for (int j = 0; j< m;j++)
-		{
-			if(tab[i][j] == ancien)
-				nv[i][j] = nouveau;
-			else 
-				nv[i][j] = tab[i][j];
-		}
-	}
-	return nv;
-}
-
-/**
-*Ecriture sur un fichier à partir d'un tableau de caractères
-*@param nomFichier le fichier
-*@param	tab le tableau
-*@param	n nombre de lignes du tableau
-*@param m nombre de colonnes du tableau
-*/
-void ecrire_fichier(const char* nomFichier, char** tab, int n, int m)
-{
-	FILE* fichier =  fopen(nomFichier,"w");
-	for(int i=0;i<n;i++)
-	{
-		for (int j = 0; j< m;j++)
-		{
-			fputc(tab[i][j],fichier);
-		
-		}
-		fputc('\n',fichier);
-	}
-
-	fclose(fichier);
+void pause(int time){
+    SDL_Delay(time);
 }
