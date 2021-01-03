@@ -7,7 +7,7 @@
 #include<stdlib.h>
 #include<SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
-#include"fonctions_SDL.h"
+#include"headers/fonctions_SDL.h"
 
 void init_SDL()
 {
@@ -19,14 +19,6 @@ void init_SDL()
 	}
 }
 
-void init_mixer()
-{
-	if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) <0)
-		{
-			printf("Erreur Initialisation Mixer : %s", Mix_GetError());
-			return;	
-		}
-}
 
 
 SDL_Window* creer_window(int hauteur,int largeur){
@@ -40,9 +32,6 @@ SDL_Window* creer_window(int hauteur,int largeur){
 	}
 	return fenetre;
 }
-
-
-
 
 
 /**

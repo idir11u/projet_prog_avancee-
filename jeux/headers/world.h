@@ -8,7 +8,6 @@
 #define  WORLD_H
 #include"gestion_terrain.h"
 #include"gestion_farmes.h"
-#include"sound.h"
 
 struct sprite_s 
 {
@@ -66,7 +65,7 @@ bool collision_murs(sprite_t sprite, terrain_t terrain, int ligne, int colonne);
 bool collision(sprite_t* sprite_1,sprite_t* sprite_2); // pour la collision entre deux sprites 
 void visible (sprite_t * sprite);// pour rendre le sprite visible 
 void invisible (sprite_t * sprite); // pour rendre le sprite invisible 
-void update_world(world_t *world,bruitages_t* bruits);
+void update_world(world_t *world);
 void clean_world(world_t *world);
 
 #endif 

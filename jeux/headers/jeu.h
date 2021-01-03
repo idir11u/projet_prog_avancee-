@@ -27,6 +27,7 @@ struct jeu_s
 	bool score;
 	bool Quit;
 	image_t background;
+	image_t background2;
 	image_t image_start;
 	image_t image_score;
 	image_t image_quit;	

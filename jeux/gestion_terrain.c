@@ -2,10 +2,12 @@
 #include <stdlib.h>
 #include<string.h>
 #include<SDL2/SDL.h>
-#include"fonctions_fichiers.h"
-#include"gestion_terrain.h"
-#include"graphes2.h"
-#include"chemin.h"
+#include"headers/fonctions_fichiers.h"
+#include"headers/gestion_terrain.h"
+#include"headers/graphes2.h"
+#include"headers/chemin.h"
+#include"headers/constante.h"
+
 
 
 /**
@@ -66,8 +68,8 @@ void init_terrain(terrain_t* t,int ligne,int colonne,char ** tab )
 	{
 		for(int j=0; j<colonne; j++)
 		{
-			t->DestR_terrain[i][j].w = 40; // Largeur du sprite
-			t->DestR_terrain[i][j].h = 40; // Hauteur du sprite
+			t->DestR_terrain[i][j].w = LARGEUR_TERRAIN_AFFICHAGE; // Largeur du sprite
+			t->DestR_terrain[i][j].h = HAUTEUR_TERRAIN_AFFICHAGE; // Hauteur du sprite
 			t->DestR_terrain[i][j].x = t->DestR_terrain[i][j].w*j;
 			t->DestR_terrain[i][j].y = t->DestR_terrain[i][j].h *i; 
 			
@@ -78,19 +80,19 @@ void init_terrain(terrain_t* t,int ligne,int colonne,char ** tab )
 	{
 		for(int j=0; j<colonne; j++)
 		{
-			if (tab[i][j]== '0'  || tab[i][j] == 'p' || tab[i][j] == ' ')
-				t->SrcR_terrain[i][j].x = 32*0;
+			if (tab[i][j]== '0'  || tab[i][j] == 'p' || tab[i][j] == ' ' || tab[i][j] == 'd')
+				t->SrcR_terrain[i][j].x = LARGEUR_TERRAIN_IMAGE*0;
 			else if (tab[i][j]== '1')
-				t->SrcR_terrain[i][j].x = 32*1;
+				t->SrcR_terrain[i][j].x = LARGEUR_TERRAIN_IMAGE*1;
 			else if (tab[i][j]== '2')
-				t->SrcR_terrain[i][j].x = 32*2;
+				t->SrcR_terrain[i][j].x = LARGEUR_TERRAIN_IMAGE*2;
 			else if (tab[i][j]== '3')
-				t->SrcR_terrain[i][j].x = 32*3;
+				t->SrcR_terrain[i][j].x = LARGEUR_TERRAIN_IMAGE*3;
 			else if (tab[i][j]== '4')
-				t->SrcR_terrain[i][j].x = 32*4;
+				t->SrcR_terrain[i][j].x = LARGEUR_TERRAIN_IMAGE*4;
 			t->SrcR_terrain[i][j].y = 0;
-			t->SrcR_terrain[i][j].w = 32;
-			t->SrcR_terrain[i][j].h = 32;
+			t->SrcR_terrain[i][j].w = LARGEUR_TERRAIN_IMAGE;
+			t->SrcR_terrain[i][j].h = HAUTEUR_TERRAIN_IMAGE;
 		}
 	}
 	
@@ -119,7 +121,7 @@ void init_terrain_avec_chemin(terrain_t* t,int ligne,int colonne,char ** tab ,in
 	{
 		int x = t->chemin.tab[i]/colonne;
 		int y = t->chemin.tab[i]%colonne;
-		t->SrcR_terrain[x][y].x = 32*3;
+		t->SrcR_terrain[x][y].x = LARGEUR_TERRAIN_IMAGE*3;
 		t->SrcR_terrain[x][y].y = 0;
 
 	}

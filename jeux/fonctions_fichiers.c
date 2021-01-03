@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include"fonctions_fichiers.h"
+#include"headers/fonctions_fichiers.h"
 
 /**
 *Allocation d'un tableau à 2 dimensions ch caractères

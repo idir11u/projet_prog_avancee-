@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include "graphes2.h"
+#include "headers/graphes2.h"
 //#include "piles.h"
 
 

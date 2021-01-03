@@ -6,8 +6,8 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<SDL2/SDL.h>
-#include"fonctions_SDL.h"
-#include"affichage_text.h"
+#include"headers/fonctions_SDL.h"
+#include"headers/affichage_text.h"
 
 void init_text_SDL_Rect(text_t* text,int x,int y,int w,int h)
 {

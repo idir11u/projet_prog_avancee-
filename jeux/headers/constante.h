@@ -1,6 +1,6 @@
 /**
 * \file  constante.h
-* \author  Ait Aider Zinedine && 
+* \author  Ait Aider Zinedine && Idir Walid Hakim
 * \Brief bibliotheque de constante. 
 */
 #ifndef CONSTANTE_H
@@ -175,6 +175,45 @@
  */
 
 #define  NBR_NIVEAU 4
+
+/**
+ * \ brief nombre de niveau
+ */
+
+#define  NBR_NIVEAU 4
+
+/**
+ * \ brief hauteur du terrain
+ */
+
+#define  HAUTEUR_TERRAIN_IMAGE 32
+
+
+/**
+ * \ brief largeur du terrain
+ */
+
+#define  LARGEUR_TERRAIN_IMAGE 32
+
+
+
+/**
+ * \ brief hauteur du terrain
+ */
+
+#define  HAUTEUR_TERRAIN_AFFICHAGE 40
+
+
+/**
+ * \ brief largeur du terrain
+ */
+
+#define  LARGEUR_TERRAIN_AFFICHAGE 40
+
+
+#define  BACKGROUND_2_LARGEUR 1000
+
+#define  BACKGROUND_2_HAUTEUR 1000
 
 
 #endif 

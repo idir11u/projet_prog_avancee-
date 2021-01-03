@@ -3,8 +3,8 @@
 #include<string.h>
 #include<SDL2/SDL.h>
 
-#include "graphes2.h"
-#include "files.h"
+#include "headers/graphes2.h"
+#include "headers/files.h"
 
 
 void init_graphe(Graphe g,char** tab,int ligne, int colonne) // depuis une matrice 
@@ -14,25 +14,25 @@ void init_graphe(Graphe g,char** tab,int ligne, int colonne) // depuis une matri
 	{
 		for (int j = 0; j <colonne ; j++)
 		{
-			if (tab[i][j] == '0' || tab[i][j] == 'p')
+			if (tab[i][j] == '0' || tab[i][j] == 'p'|| tab[i][j] == 'd')
 			{
-				if(j-1>=0 && (tab[i][j-1]=='0' || tab[i][j-1]== 'p' ))
+				if(j-1>=0 && (tab[i][j-1]=='0' || tab[i][j-1]== 'p'|| tab[i][j] == 'd'))
 				{
 					ajouter_arete(g ,cpt,cpt-1);//   
 												// pour faire un graphe orienté dans les deux sens
 					ajouter_arete(g ,cpt-1,cpt);//
 				}
-				if(j+1<=colonne-1 && (tab[i][j+1]=='0' || tab[i][j+1]=='p'))
+				if(j+1<=colonne-1 && (tab[i][j+1]=='0' || tab[i][j+1]=='p'|| tab[i][j] == 'd'))
 				{
 					ajouter_arete(g ,cpt,cpt+1);
 					ajouter_arete(g ,cpt+1,cpt);
 				}
-				if(i-1>=0 && (tab[i-1][j]=='0' || tab[i-1][j]=='p'))
+				if(i-1>=0 && (tab[i-1][j]=='0' || tab[i-1][j]=='p'|| tab[i][j] == 'd'))
 				{
 					ajouter_arete(g,cpt,cpt-colonne);
 					ajouter_arete(g,cpt-colonne,cpt);
 				}
-				if(i+1<=ligne-1 && (tab[i+1][j]=='0' || tab[i+1][j]=='p'))
+				if(i+1<=ligne-1 && (tab[i+1][j]=='0' || tab[i+1][j]=='p'|| tab[i][j] == 'd'))
 				{
 					ajouter_arete(g,cpt,cpt+colonne);
 					ajouter_arete(g,cpt+colonne,cpt);

@@ -1,14 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "fonctions_fichiers.h"
-#include"gestion_terrain.h"
-#include"world.h"
-#include"constante.h"
-#include"gestion_farmes.h"
-#include<string.h>
-#include"sound.h"
-
+#include "headers/fonctions_fichiers.h"
+#include "headers/gestion_terrain.h"
+#include "headers/world.h"
+#include "headers/constante.h"
+#include "headers/gestion_farmes.h"
+#include <string.h>
 
 void init_sprite(sprite_t * sprite,int h_terrain,int w_terrain,int x,int y,int large_img,int haut_img,int nbr_img_horis,int nbr_img_vetic)
 {
@@ -24,17 +22,28 @@ void init_sprite(sprite_t * sprite,int h_terrain,int w_terrain,int x,int y,int l
 	sprite->est_visible = 1;                                 
 }
 
-void init_pieces_money(world_t *world)
+
+/*
+elle renvoie l'indice de la case de debut ou la matice tab[i][j] = 'd' (indice = )  
+*/
+int  init_pieces_money(world_t *world)
 {
+	int indice_heros = 0;
 	File file = file_vide();
 	world->monnaie.nbr_pieces = 0;
-	for(int i = 0 ; i<world->ligne ; i++)
-		for (int j = 0; j < world->colonne ; j++)
+	for(int i = 0 ; i<world->ligne ; i++){
+		for (int j = 0; j < world->colonne ; j++){
 			if(world->tab[i][j]== 'p')
 			{
 				world->monnaie.nbr_pieces++;
 				enfiler(file, world->colonne *i + j);
 			}
+			if(world->tab[i][j]== 'd')
+			{
+				indice_heros = i*world->colonne+j;
+			}
+		}
+	}
 	if (world->monnaie.nbr_pieces > 0)
 		world->monnaie.pieces = malloc(world->monnaie.nbr_pieces*sizeof(sprite_t));
 	for(int i= 0 ; i < world->monnaie.nbr_pieces; i++)
@@ -43,12 +52,13 @@ void init_pieces_money(world_t *world)
 		defiler(file);
 	}
 	effacer_file(file);
+	return indice_heros;
 }
 
 void init_ennemies(world_t *world)
 {
 	
-	world->ennemies.nbr_ennemies = (world->terrain.chemin.nbr_sommet-2)/6;
+	world->ennemies.nbr_ennemies = (world->terrain.chemin.nbr_sommet-2)/8;
 	if (world->ennemies.nbr_ennemies == 1 || world->ennemies.nbr_ennemies == 0){
 		world->ennemies.sprite = malloc(world->ennemies.nbr_ennemies*sizeof(sprite_t));
 		world->ennemies.aller_retour = malloc(world->ennemies.nbr_ennemies*sizeof(int));
@@ -66,7 +76,7 @@ void init_ennemies(world_t *world)
 		world->ennemies.indice_chemin_actuel = malloc(world->ennemies.nbr_ennemies*sizeof(int));
 		
 		for (int i = 0 ; i<world->ennemies.nbr_ennemies;i++){
-			world->ennemies.indice_chemin_actuel[i] = 6*(i+1); //pour l'ennemmy  ;
+			world->ennemies.indice_chemin_actuel[i] = 8*(i+1); //pour l'ennemmy  ;
 			world->ennemies.aller_retour[i] = 0;
 			int y = world->terrain.DestR_terrain[0][0].h*(world->terrain.chemin.tab[world->ennemies.indice_chemin_actuel[i]]/world->colonne);//world->terrain.DestR_terrain[0][0].w * (world->terrain.chemin.tab[world->terrain.chemin.nbr_sommet/2]/world->colonne);
 			int x = world->terrain.DestR_terrain[0][0].w*(world->terrain.chemin.tab[world->ennemies.indice_chemin_actuel[i]]%world->colonne);//world->terrain.DestR_terrain[0][0].h * (world->terrain.chemin.tab[world->terrain.chemin.nbr_sommet/2]%world->colonne);
@@ -79,26 +89,28 @@ void init_world(world_t *world, int niveau,int score )
 {
 	char *niveau1;
 	if(niveau == 1) 
-		niveau1 = "terrain1.txt";
+		niveau1 = "ressource/text/terrain1.txt";
 	else if (niveau == 2)
-		niveau1 = "terrain2.txt";
+		niveau1 = "ressource/text/terrain2.txt";
 	else if (niveau == 3)
-		niveau1 = "terrain3.txt";
+		niveau1 = "ressource/text/terrain3.txt";
 	else if (niveau == 4)
-		niveau1 = "terrain4.txt";
+		niveau1 = "ressource/text/terrain4.txt";
 	world->niveau = niveau;
 	world->terminer = false;
 	world->score = score;
 	taille_fichier(niveau1,&(world->ligne),&(world->colonne));
 	world->tab = lire_fichier(niveau1);
 	init_terrain(&(world->terrain),world->ligne,world->colonne,world->tab);
-	init_sprite(&(world->heros),world->terrain.DestR_terrain[0][0].h,world->terrain.DestR_terrain[0][0].w,0,0,LARGEUR_IMAGE_HEROS, HAUTEUR_IMAGE_HEROS,NBR_HORIS_IMAGE_HEROS , NBR_VERTIC_IMAGE_HEROS);
-	init_terrain_avec_chemin(&(world->terrain),world->ligne,world->colonne ,world->tab,world->heros.DestR_sprite.x ,world->heros.DestR_sprite.y);
-	init_ennemies(world);	
-	int y = (world->terrain.chemin.tab[0]/world->colonne)*world->terrain.DestR_terrain[0][0].h;
-	int x = (world->terrain.chemin.tab[0]%world->colonne)*world->terrain.DestR_terrain[0][0].w;
+	int indice_heros = init_pieces_money(world);
+	int y = (indice_heros/world->colonne)*world->terrain.DestR_terrain[0][0].h;
+	int x = (indice_heros%world->colonne)*world->terrain.DestR_terrain[0][0].w;
+	init_terrain_avec_chemin(&(world->terrain),world->ligne,world->colonne ,world->tab,indice_heros/world->colonne,indice_heros%world->colonne);
+	init_sprite(&(world->heros),world->terrain.DestR_terrain[0][0].h,world->terrain.DestR_terrain[0][0].w,x,y,LARGEUR_IMAGE_HEROS, HAUTEUR_IMAGE_HEROS,NBR_HORIS_IMAGE_HEROS , NBR_VERTIC_IMAGE_HEROS);
+	init_ennemies(world);
+	y = (world->terrain.chemin.tab[0]/world->colonne)*world->terrain.DestR_terrain[0][0].h;
+	x = (world->terrain.chemin.tab[0]%world->colonne)*world->terrain.DestR_terrain[0][0].w;
 	init_sprite(&(world->tresor),world->terrain.DestR_terrain[0][0].h,world->terrain.DestR_terrain[0][0].w,x,y,LARGEUR_IMAGE_TRESOR, HAUTEUR_IMAGE_TRESOR,4 , 1);
-	init_pieces_money(world);
 }
 
 void depacemnt_bordure(sprite_t* sprite,int Hauteur_ecran,int Largeur_ecran)
@@ -125,7 +137,7 @@ bool collision_murs(sprite_t sprite, terrain_t terrain, int ligne, int colonne)
 		for (int j = 0; j < colonne; ++j)
 		{
 			if (terrain.SrcR_terrain[i][j].x !=0 || terrain.SrcR_terrain[i][j].y != 0 ) 
-			 	if (terrain.SrcR_terrain[i][j].x != 32*3 || terrain.SrcR_terrain[i][j].y != 0 ) // differente de la terre
+			 	if (terrain.SrcR_terrain[i][j].x !=  LARGEUR_TERRAIN_IMAGE*3 || terrain.SrcR_terrain[i][j].y != 0 ) // differente de la terre
 				{
 					x2 = terrain.DestR_terrain[i][j].x + terrain.DestR_terrain[i][j].w/2; // l'abscice du centre du du mur(i,j) 
 					y2 = terrain.DestR_terrain[i][j].y + terrain.DestR_terrain[i][j].h/2; // l'ordonnée du centre du du mur(i,j) 
@@ -272,16 +284,15 @@ void demarche_ennemies(world_t *world)
 	}
 }
 
-void update_world(world_t *world,bruitages_t* bruits)
+void update_world(world_t *world)
 {
-	depacemnt_bordure(&(world->heros),world->colonne*40,world->ligne*40);
+	depacemnt_bordure(&(world->heros),world->colonne*LARGEUR_TERRAIN_AFFICHAGE,world->ligne*HAUTEUR_TERRAIN_AFFICHAGE);
 	if(!collision(&(world->heros),&(world->tresor)) && world->heros.est_visible == 1){
 		for(int i = 0 ; i<world->ennemies.nbr_ennemies;i++){
 			if (collision(&(world->heros),&(world->ennemies.sprite[i])) && world->heros.est_visible == 1)
 			{
 				invisible(&(world->heros));
-				invisible (&(world->ennemies.sprite[i]));
-				//play_son(bruits->gameover);	
+				invisible (&(world->ennemies.sprite[i]));				
 			}
 		}
 		demarche_ennemies(world);
@@ -290,8 +301,7 @@ void update_world(world_t *world,bruitages_t* bruits)
 			if (collision(&(world->heros),&(world->monnaie.pieces[i])) && world->heros.est_visible == 1  && 1 == world->monnaie.pieces[i].est_visible)
 			{
 				invisible (&(world->monnaie.pieces[i]));
-				world->score = world->score + VALEUR_PIECE_MONEY ;
-				//play_son(bruits->money);	
+				world->score = world->score + VALEUR_PIECE_MONEY ;	    
 			}
 		}
 
